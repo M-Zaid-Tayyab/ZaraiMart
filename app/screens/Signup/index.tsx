@@ -60,7 +60,7 @@ const Signup: React.FC = () => {
                   source={images.SignUp.user}
                   style={styles.icons}
                   resizeMode="contain"
-                  // tintColor={theme.colors.placeholderText}
+                  tintColor={theme.colors.placeholderText}
                 />
               )}
             />
@@ -101,7 +101,7 @@ const Signup: React.FC = () => {
                   source={images.SignUp.email}
                   style={styles.icons}
                   resizeMode="contain"
-                  // tintColor={theme.colors.placeholderText}
+                  tintColor={theme.colors.placeholderText}
                 />
               )}
             />
@@ -143,7 +143,7 @@ const Signup: React.FC = () => {
                   source={images.SignUp.phone}
                   style={styles.icons}
                   resizeMode="contain"
-                  // tintColor={theme.colors.placeholderText}
+                  tintColor={theme.colors.placeholderText}
                 />
               )}
             />
@@ -189,7 +189,7 @@ const Signup: React.FC = () => {
                   source={images.SignUp.lock}
                   style={styles.icons}
                   resizeMode="contain"
-                  // tintColor={theme.colors.placeholderText}
+                  tintColor={theme.colors.placeholderText}
                 />
               )}
             />
@@ -209,7 +209,6 @@ const Signup: React.FC = () => {
           </Text>
         )}
       </View>
-{/* 
       <View style={styles.controller}>
         <Controller
           control={control}
@@ -230,7 +229,7 @@ const Signup: React.FC = () => {
                   source={images.SignUp.lock}
                   style={styles.icons}
                   resizeMode="contain"
-                  // tintColor={theme.colors.placeholderText}
+                  tintColor={theme.colors.placeholderText}
                 />
               )}
             />
@@ -278,7 +277,7 @@ const Signup: React.FC = () => {
             Sign In
           </Text>
         </TouchableOpacity>
-      </View> */}
+      </View> 
     </KeyboardAwareScrollView>
   );
 };

@@ -64,7 +64,7 @@ const Home: React.FC = () => {
   );
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View style={styles.subContainer}>
+      <View style={styles.subContainer}>
         <View style={styles.rowFlex}>
           <View style={styles.subRowFlex}>
             <FastImage
@@ -178,7 +178,7 @@ const Home: React.FC = () => {
             showsHorizontalScrollIndicator={false}
           />
         </ScrollView>
-      </View> */}
+      </View>
     </SafeAreaView>
   );
 };
