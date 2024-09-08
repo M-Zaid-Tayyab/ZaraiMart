@@ -18,7 +18,6 @@ export const useStyle = () => {
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(3),
-        paddingBottom:heightPercentageToDP(18)
       },
       title: {
         fontWeight: 'bold',
@@ -68,7 +67,6 @@ export const useStyle = () => {
         alignItems:'center'
       },
       rowFlex:{
-        marginTop:heightPercentageToDP(2),
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'space-between'

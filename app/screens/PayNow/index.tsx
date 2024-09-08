@@ -20,39 +20,6 @@ const PayNow: React.FC = ({route}) => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: fromSell?'Payment Details':'Pay Now',
-      headerShown: true,
-      headerStyle: {
-        backgroundColor: theme.colors.background,
-        borderBottomWidth: 0,
-        shadowOpacity: 0,
-        elevation: 0,
-      },
-      headerLeft: () => {
-        return (
-          <Pressable onPress={()=>navigation.goBack()}>
-          <FastImage
-            source={images.ForgotPassword.backButton}
-            style={{
-              height: heightPercentageToDP(4),
-              width: widthPercentageToDP(6),
-              marginLeft: widthPercentageToDP(3),
-            }}
-            resizeMode="contain"
-          />
-          </Pressable> 
-        );
-      },
-      headerTitleStyle: {
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.boldFont,
-        fontSize: widthPercentageToDP(5.6),
-      },
-      headerTransparent: false,
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>

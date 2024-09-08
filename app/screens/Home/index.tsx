@@ -1,7 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {
   FlatList,
+  Platform,
   Pressable,
   SafeAreaView,
   Text,
@@ -9,8 +10,8 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import {ScrollView} from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -19,9 +20,9 @@ import CropCard from '../../components/CropCard';
 import Filter from '../../components/Filter';
 import Searchbar from '../../components/Searchbar';
 import images from '../../config/images';
-import { dummyCropData, vegetableData } from '../../utils/dummyData';
-import { useSelector } from 'react-redux';
-import { useStyle } from './styles';
+import {dummyCropData, vegetableData} from '../../utils/dummyData';
+import {useSelector} from 'react-redux';
+import {useStyle} from './styles';
 const Home: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -107,7 +108,10 @@ const Home: React.FC = () => {
           dummy
           styles={{
             marginBottom: heightPercentageToDP(2),
-            paddingVertical: heightPercentageToDP(2),
+            paddingVertical:
+              Platform.OS === 'ios'
+                ? heightPercentageToDP(1.5)
+                : heightPercentageToDP(2),
           }}
           rightIcon={() => (
             <FastImage
@@ -169,6 +173,7 @@ const Home: React.FC = () => {
               renderItem={renderFilters}
             />
           </View>
+          <View style={{paddingBottom:heightPercentageToDP(18)}}>
           <FlatList
             data={dummyCropData}
             keyExtractor={item => item.id}
@@ -177,6 +182,7 @@ const Home: React.FC = () => {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           />
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>

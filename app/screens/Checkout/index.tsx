@@ -35,7 +35,7 @@ const Checkout: React.FC = () => {
         />
         <View style={styles.lineSeperator}></View>
         <ScrollView
-          style={styles.scrollView}
+          contentContainerStyle={styles.scrollView}
           showsVerticalScrollIndicator={false}>
           <Text style={styles.addressText}>Order List</Text>
           {dummyOrderData.map((item, index) => (

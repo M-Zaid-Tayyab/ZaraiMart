@@ -1,9 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect, useState } from 'react';
-import { FlatList, SafeAreaView, Text, View } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useLayoutEffect, useState} from 'react';
+import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
-import { useTheme } from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -11,8 +11,8 @@ import {
 import CartCard from '../../components/CartCard';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import { dummyOrderData } from '../../utils/dummyData';
-import { useStyle } from './styles';
+import {dummyOrderData} from '../../utils/dummyData';
+import {useStyle} from './styles';
 const Cart: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -32,37 +32,6 @@ const Cart: React.FC = () => {
       onPress={toggleModal}
     />
   );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'My Cart',
-      headerShown: true,
-      headerStyle: {
-        backgroundColor: theme.colors.background,
-        borderBottomWidth: 0,
-        shadowOpacity: 0,
-        elevation: 0,
-      },
-      headerLeft: () => {
-        return (
-          <FastImage
-            source={images.Order.leave}
-            style={{
-              height: heightPercentageToDP(4),
-              width: widthPercentageToDP(6),
-              marginLeft: widthPercentageToDP(3),
-            }}
-            resizeMode="contain"
-          />
-        );
-      },
-      headerTitleStyle: {
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.boldFont,
-        fontSize: widthPercentageToDP(5.6),
-      },
-      headerTransparent: false,
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
@@ -73,17 +42,19 @@ const Cart: React.FC = () => {
         />
       </View>
       <View style={styles.priceContainer}>
-        <View>
-          <Text style={styles.priceHeading}>Total Price</Text>
-          <Text style={styles.priceText}>Rs 9999</Text>
+        <View style={styles.priceSubContainer}>
+          <View>
+            <Text style={styles.priceHeading}>Total Price</Text>
+            <Text style={styles.priceText}>Rs 9999</Text>
+          </View>
+          <PrimaryButton
+            style={styles.button}
+            title="Checkout"
+            onPress={() => {
+              navigation.navigate('Checkout');
+            }}
+          />
         </View>
-        <PrimaryButton
-          style={styles.button}
-          title="Checkout"
-          onPress={() => {
-            navigation.navigate('Checkout');
-          }}
-        />
       </View>
       <Modal
         isVisible={isModalVisible}

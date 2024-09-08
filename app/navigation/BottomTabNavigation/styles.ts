@@ -16,10 +16,7 @@ export const useStyle = () => {
       },
       tabbar: {
         backgroundColor: theme.colors.background,
-        height:
-          Platform.OS == 'ios'
-            ? heightPercentageToDP(8)
-            : heightPercentageToDP(7),
+        height:heightPercentageToDP(7),
         paddingBottom: heightPercentageToDP(1),
         borderTopWidth:0,
         elevation:0,

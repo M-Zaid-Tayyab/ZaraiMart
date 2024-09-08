@@ -18,11 +18,9 @@ export const useStyle = () => {
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(3),
-        height: heightPercentageToDP(78),
-        backgroundColor: theme.colors.greyBackground,
       },
       orderCardStyle: {
-        marginTop: heightPercentageToDP(2),
+        // marginTop: heightPercentageToDP(2),
       },
       modalView: {
         backgroundColor: theme.colors.greyBackground,
@@ -77,8 +75,12 @@ export const useStyle = () => {
         fontSize: widthPercentageToDP(5.2),
       },
       priceContainer: {
+        position:'absolute',
+        bottom:0,
+        width:'100%'
+      },
+      priceSubContainer:{
         paddingHorizontal: widthPercentageToDP(3),
-        backgroundColor: theme.colors.background,
         marginTop: heightPercentageToDP(1.5),
         flexDirection: 'row',
         justifyContent: 'space-between',

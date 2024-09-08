@@ -108,31 +108,7 @@ const BottomTabNavigation = () => {
         name="Orders"
         component={TopTabNavigation}
         options={{
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: theme.colors.background,
-            borderBottomWidth: 0,
-            shadowOpacity: 0,
-            elevation: 0,
-          },
-          headerLeft: () => (
-            <FastImage
-              source={images.Order.leave}
-              style={{
-                height: heightPercentageToDP(4),
-                width: widthPercentageToDP(6),
-                marginLeft: widthPercentageToDP(3),
-              }}
-              resizeMode="contain"
-            />
-          ),
-          headerTitleStyle: {
-            color: theme.colors.primaryText,
-            fontFamily: theme.fonts.boldFont,
-            fontSize: widthPercentageToDP(5.6),
-          },
-          headerTransparent: false,
-          title: 'My Orders',
+          headerShown: false,
           tabBarLabel: ({focused, color}) => (
             <CustomTabLabel focused={focused} label="Orders" color={color} />
           ),

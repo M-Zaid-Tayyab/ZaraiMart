@@ -17,13 +17,12 @@ export const useStyle = () => {
       },
       contentContainer: {paddingBottom: heightPercentageToDP(3)},
       header: {
-        paddingTop: Platform.OS === 'android' ? heightPercentageToDP(2) : 0,
         paddingHorizontal: widthPercentageToDP(3),
       },
       subContainer: {
         paddingTop: heightPercentageToDP(27.2),
         paddingHorizontal: widthPercentageToDP(3),
-        flex:1,
+        // flex:1,
         alignItems: 'center',
         justifyContent: 'center',
       },

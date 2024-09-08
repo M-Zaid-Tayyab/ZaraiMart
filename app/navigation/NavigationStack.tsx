@@ -1,7 +1,7 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import {Pressable, StatusBar} from 'react-native';
+import {Platform, Pressable, StatusBar, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import {
@@ -28,7 +28,7 @@ import Signup from '../screens/Signup';
 import VerifySignUp from '../screens/VerifySignUp';
 import BottomTabNavigation from './BottomTabNavigation';
 import Notification from '../screens/Notification';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import AddNewAddress from '../screens/AddNewAddress';
 import PayNow from '../screens/PayNow';
 import MyProducts from '../screens/MyProducts';
@@ -85,7 +85,7 @@ function MainNavigator() {
   const commonOptions = ({route}) => ({
     headerShown: true,
     headerStyle: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.error,
       borderBottomWidth: 0,
       shadowOpacity: 0,
       elevation: 0,
@@ -113,7 +113,7 @@ function MainNavigator() {
     title: route?.params?.name,
   });
   return (
-    <Stack.Navigator initialRouteName="Main">
+    <Stack.Navigator>
       <Stack.Screen
         name="Signup"
         component={Signup}
@@ -127,17 +127,17 @@ function MainNavigator() {
       <Stack.Screen
         name="Forgot Password"
         component={ForgotPassword}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="One Time Password"
         component={OtpPassword}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Create New Password"
         component={NewPassword}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="VerifySignUp"
@@ -172,7 +172,7 @@ function MainNavigator() {
       <Stack.Screen
         name="Edit Profile"
         component={EditProfile}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Edit Product"
@@ -182,9 +182,9 @@ function MainNavigator() {
       <Stack.Screen
         name="Address"
         component={Address}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
-      <Stack.Screen name="Inbox" component={Inbox} options={commonOptions} />
+      <Stack.Screen name="Inbox" component={Inbox} options={{headerShown: false}} />
       <Stack.Screen
         name="Chat"
         component={Chat}
@@ -193,37 +193,33 @@ function MainNavigator() {
       <Stack.Screen
         name="Checkout"
         component={Checkout}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="Pay Now"
-        component={PayNow}
-        options={commonOptions}
-      />
+      <Stack.Screen name="Pay Now" component={PayNow} options={{headerShown: false}} />
       <Stack.Screen
         name="My Products"
         component={MyProducts}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Received Bids"
         component={ReceivedBids}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Shipping Address"
         component={ShippingAddress}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Add New Address"
         component={AddNewAddress}
-        options={{headerShown:false}}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Notification"
         component={Notification}
-        options={commonOptions}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -232,10 +228,10 @@ function MainNavigator() {
 function AppNavigator() {
   const isOnboarded = useSelector(state => state.userReducer.isOnboarded);
   return (
-    <NavigationContainer>
-      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
-      {isOnboarded ? <MainNavigator /> : <AuthNavigator />}
-    </NavigationContainer>
+      <NavigationContainer>
+        <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+        {isOnboarded ? <MainNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
   );
 }
 

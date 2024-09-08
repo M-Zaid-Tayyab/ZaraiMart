@@ -34,9 +34,10 @@ export const useStyle = () => {
         alignItems: 'center',
       },
       button: {
-        bottom: heightPercentageToDP(3),
+        bottom: heightPercentageToDP(1),
         position: 'absolute',
         alignSelf: 'center',
+        zIndex:121
       },
       priceText: {
         marginTop: heightPercentageToDP(0.6),
@@ -75,7 +76,7 @@ export const useStyle = () => {
         borderTopEndRadius:widthPercentageToDP(4),
         position: 'absolute',
       },
-      scrollView: {height: heightPercentageToDP(64.2)},
+      scrollView: {paddingBottom:heightPercentageToDP(30)},
     });
   return React.useMemo(() => styles(), []);
 };

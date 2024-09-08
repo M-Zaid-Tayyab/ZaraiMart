@@ -40,40 +40,6 @@ const SeeAll: React.FC = ({route}) => {
       onPress={() => handleSelectFilter(index)}
     />
   );
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: route?.params?.title,
-      headerShown: true,
-      headerStyle: {
-        backgroundColor: theme.colors.background,
-        borderBottomWidth: 0,
-        shadowOpacity: 0,
-        elevation: 0,
-      },
-      headerLeft: () => {
-        return (
-          <Pressable
-            onPress={() => navigation.goBack()}
-            style={{paddingLeft: widthPercentageToDP(3)}}>
-            <FastImage
-              source={images.ForgotPassword.backButton}
-              style={{
-                height: heightPercentageToDP(4),
-                width: widthPercentageToDP(6),
-              }}
-              resizeMode="contain"
-            />
-          </Pressable>
-        );
-      },
-      headerTitleStyle: {
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.boldFont,
-        fontSize: widthPercentageToDP(5.6),
-      },
-      headerTransparent: false,
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>

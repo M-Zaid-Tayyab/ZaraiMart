@@ -54,11 +54,8 @@ const Searchbar: React.FC<Props> = props => {
             <Pressable onPress={props?.onPress}>
               <Text
                 style={[
-                  styles.search,
+                  styles.dummySearch,
                   {
-                    // top: isTablet()
-                    //   ? heightPercentageToDP(1.8)
-                    //   : heightPercentageToDP(1.4),
                     color: props?.placeholderColor,
                   },
                 ]}>

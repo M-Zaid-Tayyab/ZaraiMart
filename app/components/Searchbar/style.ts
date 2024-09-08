@@ -12,41 +12,25 @@ export const useStyle = () => {
       searchIcon: {
         width: widthPercentageToDP(5),
         height: heightPercentageToDP(2.5),
-        // marginHorizontal: widthPercentageToDP(2),
-        // position: 'absolute',
-        // top:
-        //   Platform.OS == 'ios'
-        //     ? heightPercentageToDP(2.4)
-        //     : heightPercentageToDP(2.5),
       },
       search: {
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.semiBoldFont,
         paddingLeft:widthPercentageToDP(2),
-        // left: widthPercentageToDP(10),
-        // position: 'absolute',
-        // top: Platform.OS == 'ios' ? heightPercentageToDP(1.33) : -1,
-        // zIndex: 500,
         width: widthPercentageToDP(80),
-        // height: 400,
+        paddingVertical:heightPercentageToDP(1.2)
+      },
+      dummySearch: {
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.semiBoldFont,
+        paddingLeft:widthPercentageToDP(2),
+        width: widthPercentageToDP(80),
+        
       },
       searchParent: {
         borderRadius: widthPercentageToDP(4),
-        // overflow: 'hidden',
         marginTop: heightPercentageToDP(2),
         alignSelf: 'center',
-        // zIndex: 1,
-      },
-      searchView: {
-        width: widthPercentageToDP(90),
-        alignSelf: 'center',
-        opacity: 0.7,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: widthPercentageToDP(2),
-        overflow: 'hidden',
-        height: heightPercentageToDP(5),
-        zIndex: -1,
       },
       rowFlex:{
         paddingHorizontal:widthPercentageToDP(2),

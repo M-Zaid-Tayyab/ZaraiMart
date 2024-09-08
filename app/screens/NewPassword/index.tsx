@@ -38,7 +38,7 @@ const NewPassword: React.FC = () => {
       contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="always"
       style={styles.container}>
-      {modalVisible && <View style={styles.overlay}></View>}
+      {/* {modalVisible && <View style={styles.overlay}></View>} */}
       <SafeAreaView style={styles.subContainer}>
         <FastImage
           source={images.ForgotPassword.newPassword}
@@ -156,7 +156,7 @@ const NewPassword: React.FC = () => {
         />
       </SafeAreaView>
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -179,7 +179,7 @@ const NewPassword: React.FC = () => {
             style={styles.loaderImg}
           />
         </View>
-      </Modal>
+      </Modal> */}
     </KeyboardAwareScrollView>
   );
 };

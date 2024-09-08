@@ -97,40 +97,6 @@ const Chat: React.FC = () => {
       </TouchableOpacity>
     );
   };
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Harry',
-      headerShown: true,
-      headerStyle: {
-        backgroundColor: theme.colors.background,
-        borderBottomWidth: 0,
-        shadowOpacity: 0,
-        elevation: 0,
-      },
-      headerLeft: () => {
-        return (
-          <Pressable
-            onPress={() => navigation.goBack()}
-            style={{paddingLeft: widthPercentageToDP(3)}}>
-            <FastImage
-              source={images.ForgotPassword.backButton}
-              style={{
-                height: heightPercentageToDP(4),
-                width: widthPercentageToDP(6),
-              }}
-              resizeMode="contain"
-            />
-          </Pressable>
-        );
-      },
-      headerTitleStyle: {
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.boldFont,
-        fontSize: widthPercentageToDP(5.6),
-      },
-      headerTransparent: false,
-    });
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <GiftedChat

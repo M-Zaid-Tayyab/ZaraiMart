@@ -17,9 +17,9 @@ export const useStyle = () => {
         backgroundColor: theme.colors.background,
       },
       contentContainer: {
-        paddingTop: heightPercentageToDP(3),
         alignItems: 'center',
         paddingBottom: heightPercentageToDP(10),
+        paddingHorizontal:widthPercentageToDP(3)
       },
       title: {
         fontWeight: 'bold',
