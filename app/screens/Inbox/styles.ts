@@ -80,7 +80,6 @@ export const useStyle = () => {
       },
       FlatListContainer:{
         marginTop:heightPercentageToDP(2),
-        backgroundColor:'red'
       }
     });
   return React.useMemo(() => styles(), []);
