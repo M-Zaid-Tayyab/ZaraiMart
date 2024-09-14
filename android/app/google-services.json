@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1074962840046",
+    "project_id": "zaraimart-781a1",
+    "storage_bucket": "zaraimart-781a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074962840046:android:d5e0979d5bbea8a978b6ff",
+        "android_client_info": {
+          "package_name": "com.zaraimart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJo7rnV_XGMK8OTtDsF_nWbWlJNqXKw7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

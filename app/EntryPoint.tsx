@@ -19,11 +19,6 @@ const EntryPoint: React.FC = () => {
   useEffect(() => {
     AsyncStorage.clear();
   }, []);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     SplashScreen.hide();
-  //   }, 1000);
-  // }, []);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
