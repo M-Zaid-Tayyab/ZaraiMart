@@ -1,4 +1,4 @@
-import {StyleSheet,Platform} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import React from 'react';
 import {
@@ -17,8 +17,10 @@ export const useStyle = () => {
         backgroundColor: theme.colors.background,
       },
       subContainer: {
-        paddingTop: heightPercentageToDP(1),
         paddingHorizontal: widthPercentageToDP(3),
+      },
+      header: {
+        marginBottom: heightPercentageToDP(3),
       },
       controller: {marginTop: heightPercentageToDP(3.5)},
       error: {
@@ -26,11 +28,15 @@ export const useStyle = () => {
         paddingVertical: heightPercentageToDP(0.5),
         fontSize: isTablet() ? widthPercentageToDP(2) : undefined,
       },
-      inputStyle:{
+      inputStyle: {
         paddingVertical: heightPercentageToDP(1.5),
         width: widthPercentageToDP(83),
       },
-      button:{ alignSelf: 'center',position:'absolute',bottom:heightPercentageToDP(3)},
+      button: {
+        alignSelf: 'center',
+        position: 'absolute',
+        bottom: heightPercentageToDP(3),
+      },
     });
   return React.useMemo(() => styles(), []);
 };

@@ -36,6 +36,10 @@ const OtpPassword: React.FC = () => {
     <KeyboardAwareScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
+      <Header
+        title={'Verify OTP'}
+        style={{paddingHorizontal: widthPercentageToDP(3)}}
+      />
       <SafeAreaView>
         <View style={styles.subContainer}>
           <Text style={styles.text2}>

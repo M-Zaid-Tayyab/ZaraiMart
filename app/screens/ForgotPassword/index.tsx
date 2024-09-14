@@ -31,7 +31,9 @@ const ForgotPassword: React.FC = () => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="always">
+
       <SafeAreaView style={styles.subContainer}>
+        <Header title="Forget Password"/>
         <FastImage
           source={images.ForgotPassword.sittingPerson}
           resizeMode="contain"

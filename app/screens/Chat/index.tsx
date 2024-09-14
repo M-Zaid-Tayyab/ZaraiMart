@@ -16,6 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import images from '../../config/images';
 import {useStyle} from './styles';
+import Header from '../../components/Header';
 const Chat: React.FC = () => {
   const styles = useStyle();
   const navigation = useNavigation();
@@ -99,6 +100,10 @@ const Chat: React.FC = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <Header
+        title="Chat"
+        style={{paddingHorizontal: widthPercentageToDP(3)}}
+      />
       <GiftedChat
         messages={messages}
         renderBubble={renderBubble}

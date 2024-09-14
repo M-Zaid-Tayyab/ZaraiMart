@@ -6,6 +6,7 @@ import OrderCard from '../../components/OrderCard';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import {useStyle} from './styles';
+import Header from '../../components/Header';
 const ReceivedBids: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -17,6 +18,7 @@ const ReceivedBids: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
+      <Header title="Received Bids" style={styles.header} />
         <View style={styles.bidContainer}>
           <OrderCard
             style={styles.modelCartStyle}

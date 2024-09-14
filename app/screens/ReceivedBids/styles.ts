@@ -14,7 +14,10 @@ export const useStyle = () => {
     StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: theme.colors.greyBackground,
+        backgroundColor: theme.colors.background,
+      },
+      header: {
+        marginBottom: heightPercentageToDP(3),
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(3),

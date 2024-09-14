@@ -43,7 +43,8 @@ const SeeAll: React.FC = ({route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-        <View style={{marginBottom: heightPercentageToDP(2)}}>
+      <Header style={styles.header} title='View All' />
+        <View style={styles.flatlistContainer}>
           <FlatList
             data={vegetableData}
             horizontal
@@ -52,6 +53,7 @@ const SeeAll: React.FC = ({route}) => {
             renderItem={renderFilters}
           />
         </View>
+        <View style={styles.cropContainer}>
         <FlatList
           data={dummyCropData}
           keyExtractor={item => item.id}
@@ -60,6 +62,7 @@ const SeeAll: React.FC = ({route}) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         />
+        </View>
       </View>
     </SafeAreaView>
   );

@@ -40,6 +40,7 @@ const NewPassword: React.FC = () => {
       style={styles.container}>
       {/* {modalVisible && <View style={styles.overlay}></View>} */}
       <SafeAreaView style={styles.subContainer}>
+        <Header title="New Password"/>
         <FastImage
           source={images.ForgotPassword.newPassword}
           resizeMode="contain"
@@ -130,23 +131,6 @@ const NewPassword: React.FC = () => {
             </Text>
           )}
         </View>
-        <BouncyCheckbox
-          size={20}
-          unfillColor="transparent"
-          fillColor={theme.colors.primaryButton}
-          text="Remember me"
-          useNativeDriver
-          iconStyle={styles.iconStyle}
-          style={{
-            marginVertical: heightPercentageToDP(2),
-            alignSelf: 'center',
-          }}
-          textStyle={styles.checkBoxText}
-          isChecked={rememberMe}
-          onPress={(isChecked: boolean) => {
-            setRememberMe(isChecked);
-          }}
-        />
         <PrimaryButton
           style={styles.button}
           title="Continue"

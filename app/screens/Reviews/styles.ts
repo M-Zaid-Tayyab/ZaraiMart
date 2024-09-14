@@ -16,12 +16,7 @@ export const useStyle = () => {
         flex: 1,
         backgroundColor: theme.colors.background,
       },
-      header: {
-        paddingTop: Platform.OS === 'android' ? heightPercentageToDP(2) : 0,
-        paddingHorizontal: widthPercentageToDP(3),
-      },
       subContainer: {
-        marginTop:heightPercentageToDP(1),
         paddingHorizontal: widthPercentageToDP(3),
         paddingBottom:heightPercentageToDP(1),
       },

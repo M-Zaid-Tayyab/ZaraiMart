@@ -28,6 +28,7 @@ import {
   vegetableData,
 } from '../../utils/dummyData';
 import {useStyle} from './styles';
+import Header from '../../components/Header';
 
 const Search: React.FC = () => {
   const styles = useStyle();
@@ -140,6 +141,7 @@ const Search: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
+      <Header  title='Search' />
         <Searchbar
           isFocused={handleIsFocused}
           onChangeText={handleChangeText}

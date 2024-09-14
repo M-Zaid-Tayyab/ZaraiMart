@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Platform} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,

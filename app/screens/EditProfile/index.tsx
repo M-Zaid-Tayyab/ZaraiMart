@@ -22,6 +22,7 @@ const EditProfile: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
+        <Header title="Edit Profile" style={styles.header} />
         <View >
           <Controller
             control={control}

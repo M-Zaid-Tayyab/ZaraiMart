@@ -77,7 +77,8 @@ export const useStyle = () => {
       priceContainer: {
         position:'absolute',
         bottom:0,
-        width:'100%'
+        width:'100%',
+        backgroundColor:'white'
       },
       priceSubContainer:{
         paddingHorizontal: widthPercentageToDP(3),

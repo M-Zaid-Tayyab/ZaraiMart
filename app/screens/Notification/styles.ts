@@ -17,9 +17,9 @@ export const useStyle = () => {
         backgroundColor: theme.colors.background,
       },
       subContainer: {
-        paddingTop: heightPercentageToDP(1),
         paddingHorizontal: widthPercentageToDP(3),
       },
+      header:{marginBottom:heightPercentageToDP(2)},
       infoContainer: {
         justifyContent: 'center',
         alignItems: 'center',

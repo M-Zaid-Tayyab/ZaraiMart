@@ -94,6 +94,9 @@ export const useStyle = () => {
         flexDirection:'row',
         alignItems:'center'
       },
+      header: {
+        marginBottom: heightPercentageToDP(3),
+      },
     });
   return React.useMemo(() => styles(), []);
 };

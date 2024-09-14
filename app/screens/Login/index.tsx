@@ -123,23 +123,9 @@ const Login: React.FC = () => {
           </Text>
         )}
       </View>
-      <BouncyCheckbox
-        size={20}
-        unfillColor="transparent"
-        fillColor={theme.colors.primaryButton}
-        text="Remember me"
-        useNativeDriver
-        iconStyle={styles.iconStyle}
-        style={{marginVertical: heightPercentageToDP(2)}}
-        textStyle={styles.checkBoxText}
-        isChecked={rememberMe}
-        onPress={(isChecked: boolean) => {
-          setRememberMe(isChecked);
-        }}
-      />
       <PrimaryButton
         title="Sign in"
-        // disabled={formState.isValid?false:true}
+        style={{marginTop:heightPercentageToDP(3)}}
         disabledWhileAnimating
         onPress={handleSubmit(login)}
         animating={isLoading}

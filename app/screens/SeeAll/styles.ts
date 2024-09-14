@@ -17,13 +17,10 @@ export const useStyle = () => {
         backgroundColor: theme.colors.background,
       },
       subContainer: {
-        marginTop: heightPercentageToDP(1),
         paddingHorizontal: widthPercentageToDP(3),
-        paddingBottom: heightPercentageToDP(6),
       },
       header: {
-        paddingTop: Platform.OS === 'android' ? heightPercentageToDP(2) : 0,
-        paddingHorizontal: widthPercentageToDP(3),
+        marginBottom:widthPercentageToDP(5),
       },
       title: {
         fontWeight: 'bold',
@@ -74,6 +71,10 @@ export const useStyle = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
       },
+      flatlistContainer:{marginBottom: heightPercentageToDP(2)},
+      cropContainer:{
+        paddingBottom:heightPercentageToDP(26),
+      }
     });
   return React.useMemo(() => styles(), []);
 };

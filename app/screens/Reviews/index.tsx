@@ -17,6 +17,7 @@ import Filter from '../../components/Filter';
 import images from '../../config/images';
 import { dummyReviews, reviewFilter } from '../../utils/dummyData';
 import { useStyle } from './styles';
+import Header from '../../components/Header';
 const Review: React.FC = ({route}) => {
   const styles = useStyle();
   const theme = useTheme();
@@ -63,15 +64,7 @@ const Review: React.FC = ({route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-        {/* <View style={{marginBottom: heightPercentageToDP(2)}}>
-          <FlatList
-            data={reviewFilter}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            renderItem={renderFilters}
-          />
-        </View> */}
+        <Header title='Reviews'style={{marginBottom:heightPercentageToDP(2)}} />
         <FlatList
           data={dummyReviews}
           renderItem={renderReviews}

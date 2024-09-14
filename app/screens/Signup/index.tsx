@@ -27,7 +27,7 @@ const Signup: React.FC = () => {
   const watchedPassword = watch('password'); 
   const signUp = async (data?: any) => {
     console.log(data);
-    navigation.navigate("Login");
+    navigation.navigate("VerifySignUp");
   };
   return (
     <KeyboardAwareScrollView

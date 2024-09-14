@@ -8,6 +8,8 @@ import PrimaryButton from '../../components/PrimaryButton';
 import {useStyle} from './styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
+import Header from '../../components/Header';
 const VerifySignUp: React.FC = () => {
   const navigation = useNavigation<any>();
   const theme = useTheme();
@@ -30,6 +32,10 @@ const VerifySignUp: React.FC = () => {
     <KeyboardAwareScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
+      <Header
+        title={'Verify OTP'}
+        style={{paddingHorizontal: widthPercentageToDP(3)}}
+      />
       <SafeAreaView style={styles.subContainer}>
         <Text style={styles.text2}>
           Enter OTP sent to your email for the verification process.

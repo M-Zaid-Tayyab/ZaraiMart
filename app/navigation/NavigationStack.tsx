@@ -113,7 +113,7 @@ function MainNavigator() {
     title: route?.params?.name,
   });
   return (
-    <Stack.Navigator initialRouteName='Main'>
+    <Stack.Navigator initialRouteName='Main' >
       <Stack.Screen
         name="Signup"
         component={Signup}
