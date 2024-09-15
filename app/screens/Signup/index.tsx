@@ -14,6 +14,12 @@ import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import {useStyle} from './styles';
+import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {useDispatch} from 'react-redux';
+import {formateErrorMessage} from '../../utils/helperFunctions';
 
 const Signup: React.FC = () => {
   const styles = useStyle();
@@ -21,20 +27,48 @@ const Signup: React.FC = () => {
   const navigation = useNavigation<any>();
   const {control, handleSubmit, formState, watch, setValue} = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
   const updatePassword = (newPassword: string) => {
     setValue('password', newPassword);
   };
-  const watchedPassword = watch('password'); 
+  const watchedPassword = watch('password');
   const signUp = async (data?: any) => {
-    console.log(data);
-    navigation.navigate("VerifySignUp");
+    try {
+      setIsLoading(true);
+      const phoneQuery = await firestore()
+        .collection('users')
+        .where('phone', '==', data?.phone)
+        .get();
+
+      if (!phoneQuery.empty) {
+        dispatch(enableSnackbar('Phone number already exists'));
+        return;
+      }
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        data?.email,
+        data?.password,
+      );
+      const user = userCredential.user;
+      await firestore().collection('users').doc(userCredential.user.uid).set({
+        name: data?.name,
+        phone: data?.phone,
+        email: data?.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      await user.sendEmailVerification();
+      dispatch(enableSnackbar('Please check your email for verification'));
+      navigation.navigate('Login');
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <KeyboardAwareScrollView
       style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      >
-       <FastImage
+      contentContainerStyle={styles.contentContainer}>
+      <FastImage
         source={images.SignUp.logo}
         resizeMode="contain"
         style={styles.logo}
@@ -42,7 +76,7 @@ const Signup: React.FC = () => {
 
       <Text style={styles.heading}>Sign Up</Text>
       <Text style={styles.text}>Enter details to continue</Text>
-      
+
       <View style={styles.controller}>
         <Controller
           control={control}
@@ -249,7 +283,7 @@ const Signup: React.FC = () => {
       </View>
       <PrimaryButton
         title="Sign up"
-        style={{marginTop:heightPercentageToDP(0.8)}}
+        style={{marginTop: heightPercentageToDP(0.8)}}
         disabledWhileAnimating
         onPress={handleSubmit(signUp)}
         animating={isLoading}
@@ -277,7 +311,7 @@ const Signup: React.FC = () => {
             Sign In
           </Text>
         </TouchableOpacity>
-      </View> 
+      </View>
     </KeyboardAwareScrollView>
   );
 };

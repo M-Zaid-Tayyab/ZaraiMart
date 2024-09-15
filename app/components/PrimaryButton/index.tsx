@@ -1,11 +1,11 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { isTablet } from 'react-native-device-info';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {isTablet} from 'react-native-device-info';
+import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useStyle } from './style';
-import { Props } from './types';
+import {useStyle} from './style';
+import {Props} from './types';
 const PrimaryButton: React.FC<Props> = props => {
   const styles = useStyle();
   const theme = useTheme();
@@ -38,16 +38,18 @@ const PrimaryButton: React.FC<Props> = props => {
             color={theme.colors.primaryText}
           />
         ) : null}
-        <Text
-          style={[
-            styles.text,
-            {
-              color: 'white',
-            },
-            props.textStyle,
-          ]}>
-          {props.title}
-        </Text>
+        {!props?.animating && (
+          <Text
+            style={[
+              styles.text,
+              {
+                color: 'white',
+              },
+              props.textStyle,
+            ]}>
+            {props.title}
+          </Text>
+        )}
       </View>
       {props.animating && (
         <ActivityIndicator

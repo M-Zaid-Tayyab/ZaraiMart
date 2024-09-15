@@ -1,18 +1,20 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Keyboard, SafeAreaView, Text, View } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
+import {Keyboard, SafeAreaView, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useTheme } from 'react-native-paper';
-import {
-  widthPercentageToDP
-} from 'react-native-responsive-screen';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useTheme} from 'react-native-paper';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import Header from '../../components/Header';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import { useStyle } from './styles';
+import auth from '@react-native-firebase/auth';
+import {useStyle} from './styles';
+import {useDispatch} from 'react-redux';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import { formateErrorMessage } from '../../utils/helperFunctions';
 const ForgotPassword: React.FC = () => {
   const navigation = useNavigation<any>();
   const theme = useTheme();
@@ -20,10 +22,20 @@ const ForgotPassword: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const {control, handleSubmit, reset, trigger, formState, getValues} =
     useForm();
-
-  const forgetPassword = () => {
-    Keyboard.dismiss();
-    navigation.navigate('One Time Password');
+  const dispatch = useDispatch();
+  const forgetPassword = async data => {
+    try {
+      setIsLoading(true)
+      await auth().sendPasswordResetEmail(data?.email);
+      dispatch(enableSnackbar('Password reset email sent'));
+      navigation.navigate("Login")
+    } catch (error) {
+      console.log("Error: ",error)
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    }
+    finally{
+      setIsLoading(false)
+    }
   };
 
   return (
@@ -31,9 +43,8 @@ const ForgotPassword: React.FC = () => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="always">
-
       <SafeAreaView style={styles.subContainer}>
-        <Header title="Forget Password"/>
+        <Header title="Forget Password" />
         <FastImage
           source={images.ForgotPassword.sittingPerson}
           resizeMode="contain"
@@ -58,7 +69,7 @@ const ForgotPassword: React.FC = () => {
                 onChangeText={onChange}
                 numberOfCharacter={30}
                 value={value}
-                style={{width:widthPercentageToDP(94)}}
+                style={{width: widthPercentageToDP(94)}}
                 placeholder="Email"
                 renderIcon={() => (
                   <FastImage

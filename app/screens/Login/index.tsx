@@ -1,3 +1,4 @@
+import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
@@ -10,12 +11,13 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {useDispatch} from 'react-redux';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {useStyle} from './styles';
-
+import { formateErrorMessage } from '../../utils/helperFunctions';
 const Login: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -24,9 +26,25 @@ const Login: React.FC = () => {
     useForm();
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const dispatch = useDispatch();
   const login = async (data?: any) => {
-    navigation.navigate('Main');
+    try {
+      setIsLoading(true);
+      const userCredential = await auth().signInWithEmailAndPassword(
+        data?.email,
+        data?.password,
+      );
+      const user = userCredential.user;
+      if (!user.emailVerified) {
+        dispatch(enableSnackbar('Please verify your email to sign in'));
+        return;
+      }
+      navigation.navigate('Main');
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -125,7 +143,7 @@ const Login: React.FC = () => {
       </View>
       <PrimaryButton
         title="Sign in"
-        style={{marginTop:heightPercentageToDP(3)}}
+        style={{marginTop: heightPercentageToDP(3)}}
         disabledWhileAnimating
         onPress={handleSubmit(login)}
         animating={isLoading}

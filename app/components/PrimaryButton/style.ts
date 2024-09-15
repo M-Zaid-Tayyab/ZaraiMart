@@ -21,8 +21,7 @@ export const useStyle = () => {
         zIndex: -1,
       },
       activityIndicator: {
-        position: 'absolute',
-        right: widthPercentageToDP(3),
+        alignSelf:'center'
       },
       text: {
         fontFamily: theme.fonts.boldFont,
