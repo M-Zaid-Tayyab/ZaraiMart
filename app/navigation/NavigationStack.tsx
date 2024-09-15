@@ -1,9 +1,9 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
-import {Platform, Pressable, StatusBar, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Platform, Pressable, StatusBar, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import {Snackbar, useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -28,12 +28,13 @@ import Signup from '../screens/Signup';
 import VerifySignUp from '../screens/VerifySignUp';
 import BottomTabNavigation from './BottomTabNavigation';
 import Notification from '../screens/Notification';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AddNewAddress from '../screens/AddNewAddress';
 import PayNow from '../screens/PayNow';
 import MyProducts from '../screens/MyProducts';
 import EditProduct from '../screens/EditProduct';
 import ReceivedBids from '../screens/ReceivedBids';
+import {disableSnackbar} from '../redux/slices/snackbarSlice';
 const Stack = createStackNavigator();
 function AuthNavigator() {
   const theme = useTheme();
@@ -113,7 +114,7 @@ function MainNavigator() {
     title: route?.params?.name,
   });
   return (
-    <Stack.Navigator initialRouteName='Main' >
+    <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
         name="Signup"
         component={Signup}
@@ -184,7 +185,11 @@ function MainNavigator() {
         component={Address}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="Inbox" component={Inbox} options={{headerShown: false}} />
+      <Stack.Screen
+        name="Inbox"
+        component={Inbox}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="Chat"
         component={Chat}
@@ -195,7 +200,11 @@ function MainNavigator() {
         component={Checkout}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="Pay Now" component={PayNow} options={{headerShown: false}} />
+      <Stack.Screen
+        name="Pay Now"
+        component={PayNow}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="My Products"
         component={MyProducts}
@@ -227,11 +236,24 @@ function MainNavigator() {
 
 function AppNavigator() {
   const isOnboarded = useSelector(state => state.userReducer.isOnboarded);
+  const message = useSelector(state => state.snackbarReducer.snackbarMessage);
+  const isVisible = useSelector(state => state.snackbarReducer.snackbarVisible);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(disableSnackbar());
+    }, 3000);
+  }, [isVisible, dispatch]);
   return (
-      <NavigationContainer>
-        <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
-        {isOnboarded ? <MainNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
+    <NavigationContainer>
+      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
+      {isOnboarded ? <MainNavigator /> : <AuthNavigator />}
+      <Snackbar visible={isVisible} onDismiss={() => {}} style={{zIndex: 5000}}>
+        <Text style={{color: 'lightgrey'}}>{message}</Text>
+      </Snackbar>
+    </NavigationContainer>
   );
 }
 

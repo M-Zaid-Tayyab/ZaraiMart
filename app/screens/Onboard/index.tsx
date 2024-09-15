@@ -11,15 +11,16 @@ import { useTheme } from 'react-native-paper';
 import {
   widthPercentageToDP
 } from 'react-native-responsive-screen';
+import { useDispatch } from 'react-redux';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import { onBoardingCompleted } from '../../redux/slices/userSlice';
-import { dispatch } from '../../redux/store';
 import { useStyle } from './styles';
 const Onboard: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
   const navigation = useNavigation<any>();
+  const dispatch=useDispatch();
   const [page, setPage] = useState(1);
   const imageSource = () => {
     return page == 1
