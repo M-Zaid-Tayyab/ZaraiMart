@@ -81,6 +81,7 @@ function AuthNavigator() {
 }
 
 function MainNavigator() {
+  const user = useSelector(state => state.userReducer.user);
   const theme = useTheme();
   const navigation = useNavigation();
   const commonOptions = ({route}) => ({
@@ -114,7 +115,7 @@ function MainNavigator() {
     title: route?.params?.name,
   });
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName={user ? 'Main' : 'Login'}>
       <Stack.Screen
         name="Signup"
         component={Signup}

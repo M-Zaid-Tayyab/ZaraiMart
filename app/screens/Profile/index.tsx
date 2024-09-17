@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
       <View style={styles.subContainer}>
         <View style={styles.infoContainer}>
           <FastImage
-            source={userImg ? {uri: userImg} : images.Home.zaid}
+            source={userImg ? {uri: userImg} : images.Home.userPlaceholder}
             style={styles.img}
             // resizeMode="contain"
           />

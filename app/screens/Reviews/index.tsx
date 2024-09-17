@@ -31,7 +31,7 @@ const Review: React.FC = ({route}) => {
       <View style={styles.rowFlex}>
         <View style={styles.rowContainer}>
         <FastImage
-          source={images.Home.zaid}
+          source={images.Home.userPlaceholder}
           style={styles.img}
           resizeMode="contain"
         />

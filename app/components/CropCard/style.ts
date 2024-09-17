@@ -15,8 +15,8 @@ export const useStyle = () => {
       flexrow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width:widthPercentageToDP(35),
+        // justifyContent: 'space-between',
+        // width:widthPercentageToDP(35),
         marginTop:heightPercentageToDP(1)
       },
       cropImage: {
@@ -41,11 +41,13 @@ export const useStyle = () => {
       seperatorIcon: {
         height: heightPercentageToDP(1.7),
         width: widthPercentageToDP(0.4),
+        marginLeft:widthPercentageToDP(2)
       },
       ratingText: {
         fontFamily: theme.fonts.mediumFont,
         color: theme.colors.grey700,
         fontSize: widthPercentageToDP(3),
+        marginLeft:widthPercentageToDP(1)
       },
       greenContainer:{
         paddingHorizontal:widthPercentageToDP(2.2),
@@ -53,6 +55,7 @@ export const useStyle = () => {
         borderWidth:widthPercentageToDP(0.27),
         borderRadius:widthPercentageToDP(2),
         borderColor:theme.colors.primaryButton,
+        marginLeft:widthPercentageToDP(2)
       },
       soldText: {
         fontFamily: theme.fonts.semiBoldFont,

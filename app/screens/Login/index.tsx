@@ -17,7 +17,9 @@ import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {useStyle} from './styles';
-import { formateErrorMessage } from '../../utils/helperFunctions';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import {saveUser} from '../../redux/slices/userSlice';
+import firestore from '@react-native-firebase/firestore';
 const Login: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -39,6 +41,17 @@ const Login: React.FC = () => {
         dispatch(enableSnackbar('Please verify your email to sign in'));
         return;
       }
+      const userDocRef = firestore().collection('users').doc(user.uid);
+      const userDoc = await userDocRef.get();
+      const userInfo = userDoc.data();
+      const userPayload = {
+        uid: user.uid,
+        email: userInfo?.email,
+        name: userInfo?.name,
+        phone: userInfo?.phone,
+        profileUrl: userInfo?.profileUrl,
+      };
+      dispatch(saveUser(userPayload));
       navigation.navigate('Main');
     } catch (error) {
       dispatch(enableSnackbar(formateErrorMessage(error.message)));

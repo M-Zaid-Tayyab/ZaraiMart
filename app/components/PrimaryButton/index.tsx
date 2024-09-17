@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import {isTablet} from 'react-native-device-info';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useStyle} from './style';

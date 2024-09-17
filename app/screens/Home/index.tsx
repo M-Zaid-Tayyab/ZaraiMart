@@ -1,6 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
@@ -16,27 +18,34 @@ import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
+import {useDispatch, useSelector} from 'react-redux';
 import CropCard from '../../components/CropCard';
-import Filter from '../../components/Filter';
 import Searchbar from '../../components/Searchbar';
 import images from '../../config/images';
-import {dummyCropData, vegetableData} from '../../utils/dummyData';
-import {useSelector} from 'react-redux';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {formateErrorMessage} from '../../utils/helperFunctions';
 import {useStyle} from './styles';
+
 const Home: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
-  const userImg = useSelector(state => state.userReducer.profileImg);
+  const user = useSelector(state => state.userReducer.user);
   const navigation = useNavigation<any>();
   const [selectedFilterIndex, setSelectedFilterIndex] = useState(-1);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const handleSelectFilter = (index: number) => {
     setSelectedFilterIndex(index === selectedFilterIndex ? -1 : index);
   };
+  const [isRecentlyCropsLoading, setIsRecentlyCropsLoading] = useState(true);
+  const [isPopularCropsLoading, setIsPopularCropsLoading] = useState(true);
+  const [recentCropsData, setRecentCropsData] = useState();
+  const [mostPopularCropsData, setMostPopularCropsData] = useState();
   const renderSpecialCrops = ({item}) => (
     <CropCard
       style={{marginRight: widthPercentageToDP(5)}}
-      image={images.Onboard.page1}
-      name={item?.name}
+      image={{uri: item?.images?.[0]}}
+      name={item?.title}
       rating={item?.rating}
       noOfSold={item?.noOfSold}
       price={item?.price}
@@ -47,35 +56,102 @@ const Home: React.FC = () => {
   const renderMostPopularCrops = ({item}) => (
     <CropCard
       style={{marginRight: widthPercentageToDP(5)}}
-      image={images.Onboard.page1}
-      name={item?.name}
+      image={{uri: item?.images?.[0]}}
+      name={item?.title}
       rating={item?.rating}
       noOfSold={item?.noOfSold}
       price={item?.price}
       onPress={() => navigation.navigate('Crop')}
     />
   );
-  const renderFilters = ({item, index}) => (
-    <Filter
-      name={item?.name}
-      style={{marginRight: widthPercentageToDP(2)}}
-      isSelected={index === selectedFilterIndex}
-      onPress={() => handleSelectFilter(index)}
-    />
-  );
+  const getSortedCrops = async () => {
+    try {
+      setIsRecentlyCropsLoading(true);
+      const cropsSnapshot = await firestore()
+        .collection('crops')
+        .orderBy('createdAt', 'desc')
+        .limit(10)
+        .get();
+      const cropsData = cropsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setRecentCropsData(cropsData);
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsRecentlyCropsLoading(false);
+    }
+  };
+  const getPopularCrops = async () => {
+    try {
+      setIsPopularCropsLoading(true);
+      const cropsSnapshot = await firestore()
+        .collection('crops')
+        .limit(10)
+        .get();
+      const cropsWithReviewCounts = await Promise.all(
+        cropsSnapshot.docs.map(async cropDoc => {
+          const cropData = cropDoc.data();
+          const cropId = cropDoc.id;
+
+          try {
+            const reviewsSnapshot = await firestore()
+              .collection('crops')
+              .doc(cropId)
+              .collection('reviews')
+              .get();
+
+            const reviewCount = reviewsSnapshot.size;
+
+            return {
+              id: cropId,
+              ...cropData,
+              reviewCount,
+            };
+          } catch (error) {
+            return {
+              id: cropId,
+              ...cropData,
+              reviewCount: 0,
+            };
+          }
+        }),
+      );
+      const sortedCrops = cropsWithReviewCounts.sort(
+        (a, b) => b.reviewCount - a.reviewCount,
+      );
+
+      setMostPopularCropsData(sortedCrops);
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsPopularCropsLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (isFocused) {
+      getSortedCrops();
+      getPopularCrops();
+    }
+  }, [isFocused]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
         <View style={styles.rowFlex}>
           <View style={styles.subRowFlex}>
             <FastImage
-              source={images.Home.zaid}
+              source={
+                user?.profileUrl
+                  ? {uri: user?.profileUrl}
+                  : images.Home.userPlaceholder
+              }
               style={styles.img}
               resizeMode="cover"
             />
             <View>
-              <Text style={styles.greetingText}>Good Morning 👋</Text>
-              <Text style={styles.nameText}>Muhammad Zaid</Text>
+              <Text style={styles.nameText}>Hi {user?.name}</Text>
+              <Text style={styles.greetingText}>Welcome back </Text>
             </View>
           </View>
           <View style={styles.subRowFlex}>
@@ -129,28 +205,36 @@ const Home: React.FC = () => {
         />
         <ScrollView
           showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}>
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: heightPercentageToDP(18)}}>
           <View
             style={[
               styles.subRowFlex,
               {marginBottom: heightPercentageToDP(2)},
             ]}>
-            <Text style={styles.nameText}>Special Offers</Text>
+            <Text style={styles.nameText}>Recently Uploaded</Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('SeeAll', {title: 'Special Offers'});
+                navigation.navigate('SeeAll', {title: 'recentlyUploaded'});
               }}>
               <Text style={styles.greenText}>See All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={dummyCropData}
-            keyExtractor={item => item.id}
-            renderItem={renderSpecialCrops}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          />
+          {isRecentlyCropsLoading ? (
+            <ActivityIndicator
+              color={theme.colors.primaryButton}
+              size={'large'}></ActivityIndicator>
+          ) : (
+            <FlatList
+              data={recentCropsData}
+              keyExtractor={item => item.id}
+              renderItem={renderSpecialCrops}
+              horizontal
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+            />
+          )}
+
           <View
             style={[
               styles.subRowFlex,
@@ -159,30 +243,26 @@ const Home: React.FC = () => {
             <Text style={styles.nameText}>Most Popular</Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('SeeAll', {title: 'Most Popular'});
+                navigation.navigate('SeeAll', {title: 'mostPopular'});
               }}>
               <Text style={styles.greenText}>See All</Text>
             </TouchableOpacity>
           </View>
-          <View style={{marginBottom: heightPercentageToDP(2)}}>
+
+          {isPopularCropsLoading ? (
+            <ActivityIndicator
+              color={theme.colors.primaryButton}
+              size={'large'}></ActivityIndicator>
+          ) : (
             <FlatList
-              data={vegetableData}
+              data={mostPopularCropsData}
+              keyExtractor={item => item.id}
+              renderItem={renderMostPopularCrops}
               horizontal
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              renderItem={renderFilters}
             />
-          </View>
-          <View style={{paddingBottom:heightPercentageToDP(18)}}>
-          <FlatList
-            data={dummyCropData}
-            keyExtractor={item => item.id}
-            renderItem={renderMostPopularCrops}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          />
-          </View>
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>

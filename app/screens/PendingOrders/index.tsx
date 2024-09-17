@@ -30,7 +30,7 @@ const PendingOrders: React.FC = () => {
       quantity={item?.quantity}
       onPress={toggleModal}
       sellerName="Seller"
-      sellerImg={images.Home.zaid}
+      sellerImg={images.Home.userPlaceholder}
       pending
     />
   );
@@ -59,7 +59,7 @@ const PendingOrders: React.FC = () => {
             price={parseInt((Math.random() * 10000).toFixed(2))}
             quantity={Math.floor(Math.random() * 100) + 1}
             sellerName="Zaid"
-            sellerImg={images.Home.zaid}
+            sellerImg={images.Home.userPlaceholder}
             fromModal
           />
           <View style={styles.lineSeperator}></View>

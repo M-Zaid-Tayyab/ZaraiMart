@@ -20,7 +20,7 @@ const ActiveOrders: React.FC = () => {
       quantity={item?.quantity}
       onPress={() => {}}
       sellerName="Seller"
-      sellerImg={images.Home.zaid}
+      sellerImg={images.Home.userPlaceholder}
     />
   );
   return (

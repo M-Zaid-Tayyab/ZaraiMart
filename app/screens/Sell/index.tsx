@@ -15,7 +15,13 @@ import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import {cropCategories, unitsData} from '../../utils/dummyData';
 import {useStyle} from './styles';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import { formateErrorMessage } from '../../utils/helperFunctions';
 const Sell: React.FC = () => {
+  const user = useSelector(state => state.userReducer.user);
   const styles = useStyle();
   const theme = useTheme();
   const [fullName, setFullName] = useState('');
@@ -25,6 +31,7 @@ const Sell: React.FC = () => {
   const [unitValue, setUitValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [isFocus, setIsFocus] = useState(false);
+  const dispatch = useDispatch();
   const [imageURIs, setImageURIs] = useState({
     image1: null,
     image2: null,
@@ -57,7 +64,6 @@ const Sell: React.FC = () => {
     if (firstNullKey !== null) {
       handleImagePick(firstNullKey);
     } else {
-      // Handle case when all images are selected
     }
   };
   const handleRemoveImage = key => {
@@ -65,6 +71,59 @@ const Sell: React.FC = () => {
       ...prevURIs,
       [key]: null,
     }));
+  };
+  const uploadImages = async imageArray => {
+    const imageUrls = [];
+    for (const imageUri of imageArray) {
+      const fileName = imageUri.split('/').pop();
+      const storageRef = storage().ref(`crops/${fileName}`);
+
+      await storageRef.putFile(imageUri);
+
+      const downloadUrl = await storageRef.getDownloadURL();
+      imageUrls.push(downloadUrl);
+    }
+
+    return imageUrls;
+  };
+  const uploadCropData = async (data: any) => {
+    try {
+      const imageArray = Object.values(imageURIs).filter(uri => uri !== null);
+      if (imageArray.length == 0) {
+        dispatch(enableSnackbar('At least 1 image is required'));
+        return;
+      }
+      else if (!unitValue) {
+        dispatch(enableSnackbar('Unit value is required'));
+        return;
+      }
+      else if (!categoryValue) {
+        dispatch(enableSnackbar('Category value is required'));
+        return;
+      }
+      setIsLoading(true);
+      const imageUrls = await uploadImages(imageArray);
+      const cropDoc = {
+        images: imageUrls,
+        title: data.title,
+        unit: unitValue,
+        price: data.price,
+        location: data.location,
+        quantity: data.quantity,
+        category: categoryValue,
+        noOfSold: 0,
+        rating: 0,
+        description: data.description,
+        userId: firestore().doc(`users/${user?.uid}`),
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      };
+      await firestore().collection('crops').add(cropDoc);
+      navigation.navigate('Pay Now', {fromSell: true});
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -195,11 +254,7 @@ const Sell: React.FC = () => {
           />
 
           {formState.errors.title && (
-            <Text
-              style={[
-                styles.error,
-                {maxWidth: widthPercentageToDP(43)},
-              ]}>
+            <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
               Title is required
             </Text>
           )}
@@ -244,11 +299,7 @@ const Sell: React.FC = () => {
           />
 
           {formState.errors.price && (
-            <Text
-              style={[
-                styles.error,
-                {maxWidth: widthPercentageToDP(43)},
-              ]}>
+            <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
               Price is required
             </Text>
           )}
@@ -298,11 +349,7 @@ const Sell: React.FC = () => {
           />
 
           {formState.errors.quantity && (
-            <Text
-              style={[
-                styles.error,
-                {maxWidth: widthPercentageToDP(43)},
-              ]}>
+            <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
               Quantity is required
             </Text>
           )}
@@ -349,11 +396,7 @@ const Sell: React.FC = () => {
             name="description"
           />
           {formState.errors.description && (
-            <Text
-              style={[
-                styles.error,
-                {maxWidth: widthPercentageToDP(43)},
-              ]}>
+            <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
               {formState.errors.description.type === 'required'
                 ? 'Description is required'
                 : 'Description must be 20 characters'}
@@ -365,7 +408,7 @@ const Sell: React.FC = () => {
         title="Post Product"
         style={styles.button}
         disabledWhileAnimating
-        onPress={handleSubmit(() => {navigation.navigate("Pay Now",{fromSell:true})})}
+        onPress={handleSubmit(uploadCropData)}
         animating={isLoading}
       />
     </ScrollView>

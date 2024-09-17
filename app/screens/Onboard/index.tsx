@@ -50,7 +50,7 @@ const Onboard: React.FC = () => {
       <FastImage
         source={imageSource()}
         style={styles.image}
-        resizeMode='contain'
+        resizeMode='cover'
       />
       <Text style={styles.heading}>{getParagraph()}</Text>
       <View style={styles.dotContainer}>

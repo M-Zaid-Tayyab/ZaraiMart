@@ -88,7 +88,7 @@ const Crop: React.FC = () => {
         <View style={styles.sellerContainer}>
           <View style={styles.row}>
             <FastImage
-              source={images.Home.zaid}
+              source={images.Home.userPlaceholder}
               style={styles.sellerImg}
               resizeMode="cover"
             />

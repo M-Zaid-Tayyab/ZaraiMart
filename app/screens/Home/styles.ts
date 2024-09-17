@@ -54,7 +54,7 @@ export const useStyle = () => {
       nameText: {
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.boldFont,
-        fontSize:widthPercentageToDP(4.2),
+        fontSize:widthPercentageToDP(4.5),
       },
       greenText: {
         color: theme.colors.primaryButton,

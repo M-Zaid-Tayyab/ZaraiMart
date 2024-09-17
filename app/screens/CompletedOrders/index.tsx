@@ -35,7 +35,7 @@ const CompletedOrders: React.FC = () => {
       quantity={item?.quantity}
       onPress={toggleModal}
       sellerName="Seller"
-      sellerImg={images.Home.zaid}
+      sellerImg={images.Home.userPlaceholder}
     />
   );
   return (
@@ -63,7 +63,7 @@ const CompletedOrders: React.FC = () => {
               status="completed"
               quantity={Math.floor(Math.random() * 100) + 1}
               sellerName="Zaid"
-              sellerImg={images.Home.zaid}
+              sellerImg={images.Home.userPlaceholder}
               fromModal
             />
             <View style={styles.lineSeperator}></View>

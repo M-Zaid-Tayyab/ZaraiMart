@@ -73,7 +73,7 @@ export const useStyle = () => {
       },
       flatlistContainer:{marginBottom: heightPercentageToDP(2)},
       cropContainer:{
-        paddingBottom:heightPercentageToDP(26),
+        paddingBottom:heightPercentageToDP(21),
       }
     });
   return React.useMemo(() => styles(), []);

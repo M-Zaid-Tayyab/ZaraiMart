@@ -37,7 +37,7 @@ const images = {
   Home: {
     heart: require('../assets/Home/Heart.png'),
     notification: require('../assets/Home/Notification.png'),
-    zaid: require('../assets/Home/user.png'),
+    userPlaceholder: require('../assets/Home/user.png'),
     search: require('../assets/Home/search.png'),
     filter: require('../assets/Home/Filter.png'),
     star: require('../assets/Home/Star.png'),

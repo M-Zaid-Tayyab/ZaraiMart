@@ -29,7 +29,7 @@ const ReceivedBids: React.FC = () => {
             price={parseInt((Math.random() * 10000).toFixed(2))}
             quantity={Math.floor(Math.random() * 100) + 1}
             sellerName="Bidder Name"
-            sellerImg={images.Home.zaid}
+            sellerImg={images.Home.userPlaceholder}
             fromModal
           />
           <View style={styles.lineSeperator}></View>

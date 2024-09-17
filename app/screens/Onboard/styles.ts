@@ -17,8 +17,8 @@ export const useStyle = () => {
         backgroundColor: theme.colors.background,
       },
       image: {
-        height: heightPercentageToDP(60),
-        marginBottom: heightPercentageToDP(2),
+        height: heightPercentageToDP(55),
+        marginBottom:heightPercentageToDP(3),
         width:widthPercentageToDP(100),
       },
       imageContainer:{
