@@ -24,7 +24,7 @@ export const useStyle = () => {
         color: theme.colors.primaryText,
       },
       img: {
-        height: heightPercentageToDP(6),
+        height: widthPercentageToDP(12),
         width: widthPercentageToDP(12),
         marginRight:widthPercentageToDP(3),
         borderRadius:widthPercentageToDP(90)

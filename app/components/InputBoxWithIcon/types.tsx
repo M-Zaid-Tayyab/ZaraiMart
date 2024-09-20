@@ -21,4 +21,5 @@ export interface Props {
   rightButton?: () => void;
   rightIcon?:any;
   onBlur?: () => void;
+  editable?:boolean;
 }

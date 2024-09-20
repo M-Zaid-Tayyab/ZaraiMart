@@ -20,20 +20,25 @@ export const useStyle = () => {
         paddingHorizontal:widthPercentageToDP(3),
       },
       infoContainer:{
-        justifyContent:'center',
-        alignItems:'center'
+        // justifyContent:'center',
+        alignItems:'center',
+        alignSelf:'center'
       },
       img:{
         width:widthPercentageToDP(26),
         height:widthPercentageToDP(26),
-        borderRadius:widthPercentageToDP(50),
+        borderRadius:widthPercentageToDP(100),
+        backgroundColor:'#b1b1b1'
       },
       penIcon:{
-        top:heightPercentageToDP(-4),
-        left:widthPercentageToDP(9),
         width:widthPercentageToDP(5),
-        position:'absolute',
         height:heightPercentageToDP(2.5),
+      },
+      penContainer:{
+        position:'absolute',
+        zIndex:400,
+        bottom:heightPercentageToDP(0.2),
+        right:widthPercentageToDP(2)
       },
       lineSeperator: {
         borderWidth: widthPercentageToDP(0.13),

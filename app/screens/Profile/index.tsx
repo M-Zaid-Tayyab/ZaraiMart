@@ -1,29 +1,35 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import ImagePicker from 'react-native-image-crop-picker';
 
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import {launchImageLibrary} from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import {useTheme} from 'react-native-paper';
-import {
-  heightPercentageToDP,
-  widthPercentageToDP,
-} from 'react-native-responsive-screen';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {useDispatch, useSelector} from 'react-redux';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import {updateProfileImg} from '../../redux/slices/userSlice';
 import {useStyle} from './styles';
+import {saveUser} from '../../redux/slices/userSlice';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import LoadingModal from '../../components/LoadingModal';
+
 const Profile: React.FC = () => {
   const styles = useStyle();
+  const user = useSelector(state => state.userReducer.user);
   const theme = useTheme();
   const dispatch = useDispatch();
   const userImg = useSelector(state => state.userReducer.profileImg);
-  const [selectedImg, setSelectedImg] = useState('');
+  const [selectedImg, setSelectedImg] = useState(user?.profileUrl || '');
   const navigation = useNavigation<any>();
   const [isModalVisible, setModalVisible] = useState(false);
   const [whichModal, setWhichModal] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const Option = props => (
     <Pressable style={styles.rowContainer} onPress={props?.onPress}>
       <View style={styles.row}>
@@ -49,25 +55,15 @@ const Profile: React.FC = () => {
       />
     </Pressable>
   );
-  const handleSelectImage = async () => {
+  const handleImagePick = async key => {
     try {
-      ImagePicker.openPicker({
-        width: 1000,
-        height: 1000,
-        // compressImageQuality:1,
-        cropperCircleOverlay: true,
-        cropping: true,
-      }).then(image => {
-        dispatch(updateProfileImg(image.path));
-        setSelectedImg(image.path);
-        // console.log(image);
-      });
-      // const response = await launchImageLibrary({mediaType: 'photo'});
-      // if (!response.didCancel) {
-      //   if (response.assets && response.assets.length > 0) {
-      //     setSelectedImg(response.assets[0].uri);
-      //   }
-      // }
+      const response = await launchImageLibrary({mediaType: 'photo'});
+      if (!response.didCancel) {
+        if (response.assets && response.assets.length > 0) {
+          setSelectedImg(response.assets[0].uri);
+          handleProfilePictureUpdate(response.assets[0].uri, user?.uid);
+        }
+      }
     } catch (error) {
       console.error('ImagePicker Error: ', error);
     }
@@ -83,30 +79,73 @@ const Profile: React.FC = () => {
     setWhichModal(() => 'Delete');
     toggleModal();
   };
+  const onLogoutPress = () => {
+    setModalVisible(!isModalVisible);
+    navigation.navigate('Login');
+    dispatch(saveUser(null));
+  };
+  const handleProfilePictureUpdate = async (newImageUri, userId) => {
+    try {
+      setIsLoading(true);
+      const userRef = firestore().collection('users').doc(userId);
+
+      const userDoc = await userRef.get();
+      const oldProfileUrl = userDoc.exists ? userDoc.data().profileUrl : null;
+
+      if (oldProfileUrl) {
+        const oldProfileRef = storage().refFromURL(oldProfileUrl);
+        await oldProfileRef.delete();
+        console.log('Old profile picture deleted successfully.');
+      }
+
+      const newProfileFilename = `profilePictures/profile_${userId}_${Date.now()}.jpg`;
+      const newProfileRef = storage().ref(newProfileFilename);
+      await newProfileRef.putFile(newImageUri);
+
+      const newProfileUrl = await newProfileRef.getDownloadURL();
+
+      await userRef.update({
+        profileUrl: newProfileUrl,
+      });
+      const updatedUser = (await userRef.get()).data();
+      const {createdAt, ...restUpdatedData} = updatedUser;
+      dispatch(
+        saveUser({
+          ...user,
+          ...restUpdatedData,
+          uid: user.uid,
+        }),
+      );
+      console.log('Profile picture updated successfully.');
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+      console.error('Error updating profile picture:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
         <View style={styles.infoContainer}>
           <FastImage
-            source={userImg ? {uri: userImg} : images.Home.userPlaceholder}
+            source={
+              selectedImg ? {uri: selectedImg} : images.Home.userPlaceholder
+            }
             style={styles.img}
-            // resizeMode="contain"
           />
-          <Pressable onPress={handleSelectImage}>
+          <Pressable style={styles.penContainer} onPress={handleImagePick}>
             <FastImage
               source={images.Profile.pen}
-              style={[
-                styles.penIcon,
-                !selectedImg && {
-                  top: heightPercentageToDP(-4),
-                  left: widthPercentageToDP(6),
-                },
-              ]}
+              style={styles.penIcon}
               resizeMode="contain"
             />
           </Pressable>
-          <Text style={styles.nameText}>Muhammad Zaid</Text>
-          <Text style={styles.numberText}>0346 6218378</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.nameText}>{user?.name}</Text>
+          <Text style={styles.numberText}>{user?.phone}</Text>
         </View>
         <View style={styles.lineSeperator}></View>
         <Option
@@ -182,7 +221,9 @@ const Profile: React.FC = () => {
               title={
                 whichModal === 'Logout' ? 'Yes, Logout' : 'Yes, Delete Account'
               }
-              onPress={toggleModal}
+              onPress={() => {
+                whichModal === 'Logout' ? onLogoutPress() : toggleModal();
+              }}
               style={[
                 styles.submitButton,
                 whichModal === 'Logout'
@@ -193,6 +234,7 @@ const Profile: React.FC = () => {
           </View>
         </View>
       </Modal>
+      <LoadingModal visible={isLoading} />
     </SafeAreaView>
   );
 };

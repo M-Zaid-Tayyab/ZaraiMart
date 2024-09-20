@@ -12,21 +12,62 @@ import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
 import {useStyle} from './styles';
+import {useDispatch, useSelector} from 'react-redux';
+import firestore from '@react-native-firebase/firestore';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import { saveUser } from '../../redux/slices/userSlice';
 const EditProfile: React.FC = () => {
   const styles = useStyle();
+  const user = useSelector(state => state.userReducer.user);
   const theme = useTheme();
   const [fullName, setFullName] = useState('');
   const navigation = useNavigation<any>();
   const [isLoading, setIsLoading] = useState(false);
   const {control, handleSubmit, formState, watch, setValue} = useForm();
+  const dispatch = useDispatch();
+  const handleUpdateProfile = async (data: any) => {
+    if (
+      (user?.name == data?.name || !data?.name) &&
+      (user?.phone == data?.phone || !data?.phone)
+    ) {
+      console.log("Returning")
+      return;
+    }
+    try {
+      setIsLoading(true)
+      const userRef = firestore().collection('users').doc(user?.uid);
+      const payload = {};
+      if (user?.name != data?.name && data?.name) payload['name'] = data?.name;
+      if (user?.phone != data?.phone && data?.phone)
+        payload['phone'] = data?.phone;
+      await userRef.update(payload);
+      const updatedUser = (await userRef.get()).data();
+      const {createdAt, ...restUpdatedData} = updatedUser;
+      dispatch(
+        saveUser({
+          ...user,
+          ...restUpdatedData,
+          uid: user.uid,
+        }),
+      );
+      navigation.goBack();
+    } catch (error) {
+      console.log(error)
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    }
+    finally{
+      setIsLoading(false)
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
         <Header title="Edit Profile" style={styles.header} />
-        <View >
+        <View>
           <Controller
             control={control}
-            defaultValue={'Muhammad Zaid'}
+            defaultValue={user?.name}
             rules={{
               required: true,
             }}
@@ -34,7 +75,7 @@ const EditProfile: React.FC = () => {
               <InputBoxWithIcon
                 onChangeText={onChange}
                 inputStyle={styles.inputStyle}
-                style={{width:widthPercentageToDP(94)}}
+                style={{width: widthPercentageToDP(94)}}
                 numberOfCharacter={30}
                 value={value}
                 placeholder="Full Name"
@@ -56,7 +97,7 @@ const EditProfile: React.FC = () => {
         <View style={styles.controller}>
           <Controller
             control={control}
-            defaultValue={'zaidtayyab1@gmail.com'}
+            defaultValue={user?.email}
             rules={{
               required: 'Email is required',
               pattern: {
@@ -68,11 +109,13 @@ const EditProfile: React.FC = () => {
               <InputBoxWithIcon
                 onChangeText={onChange}
                 numberOfCharacter={30}
-                style={{width:widthPercentageToDP(94)}}
+                style={{width: widthPercentageToDP(94)}}
                 value={value}
                 inputStyle={styles.inputStyle}
                 showError={!!formState.errors.email}
                 placeholder="Email"
+                editable={false}
+                
                 rightIcon={images.EditProfile.message}
               />
             )}
@@ -93,7 +136,7 @@ const EditProfile: React.FC = () => {
         <View style={styles.controller}>
           <Controller
             control={control}
-            defaultValue={'03208551378'}
+            defaultValue={user?.phone}
             rules={{
               required: 'Phone is required',
               minLength: {
@@ -106,7 +149,7 @@ const EditProfile: React.FC = () => {
                 onChangeText={onChange}
                 numberOfCharacter={11}
                 value={value}
-                style={{width:widthPercentageToDP(94)}}
+                style={{width: widthPercentageToDP(94)}}
                 inputStyle={styles.inputStyle}
                 placeholder="Phone Number"
                 keyboardType="dialpad"
@@ -132,7 +175,7 @@ const EditProfile: React.FC = () => {
         title="Update"
         style={styles.button}
         disabledWhileAnimating
-        onPress={handleSubmit(() => {})}
+        onPress={handleSubmit(handleUpdateProfile)}
         animating={isLoading}
       />
     </SafeAreaView>

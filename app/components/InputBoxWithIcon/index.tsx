@@ -149,6 +149,7 @@ const InputBoxWithIcon: React.FC<Props> = props => {
               }, 1000);
             }}
             autoCapitalize="none"
+            editable={props?.editable}
             placeholder={props.placeholder}
             textAlign={I18nManager.isRTL ? 'right' : 'left'}
             autoCorrect={false}

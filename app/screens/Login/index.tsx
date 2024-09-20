@@ -54,6 +54,8 @@ const Login: React.FC = () => {
       dispatch(saveUser(userPayload));
       navigation.navigate('Main');
     } catch (error) {
+
+      console.log(error)
       dispatch(enableSnackbar(formateErrorMessage(error.message)));
     } finally {
       setIsLoading(false);
