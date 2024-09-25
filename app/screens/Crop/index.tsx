@@ -40,9 +40,8 @@ const Crop: React.FC = ({route}) => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const viewableItemsChanged = useCallback(({ viewableItems }) => {
+  const viewableItemsChanged = useCallback(({viewableItems}) => {
     if (viewableItems.length > 0) {
-      console.log("Viewable Items:", viewableItems);
       setCurrentIndex(viewableItems[0].index);
     }
   }, []);
@@ -78,7 +77,7 @@ const Crop: React.FC = ({route}) => {
       {isLoading ? (
         <ActivityIndicator
           color={theme.colors.primaryButton}
-          style={{alignSelf:'center'}}
+          style={{alignSelf: 'center'}}
           size={widthPercentageToDP(11)}></ActivityIndicator>
       ) : (
         <>
@@ -98,6 +97,14 @@ const Crop: React.FC = ({route}) => {
                 minimumViewTime: 200,
               }}
             />
+            <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.backContainer}>
+              <FastImage
+                source={images.ForgotPassword.backButton}
+                style={styles.back}
+                resizeMode="contain"
+                tintColor={'white'}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.dotContainer}>
             {cropDetails?.images?.map((_, index) => (

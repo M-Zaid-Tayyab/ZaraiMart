@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { isTablet } from 'react-native-device-info';
-import { useTheme } from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {isTablet} from 'react-native-device-info';
+import {useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -18,7 +18,7 @@ export const useStyle = () => {
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(4),
-        paddingBottom:heightPercentageToDP(2)
+        paddingBottom: heightPercentageToDP(2),
       },
       img: {
         height: heightPercentageToDP(52),
@@ -31,13 +31,22 @@ export const useStyle = () => {
       star: {
         height: heightPercentageToDP(3),
         width: widthPercentageToDP(5),
-        marginLeft:widthPercentageToDP(2)
+        marginLeft: widthPercentageToDP(2),
       },
-      sellerImg:{
+      back: {
         height: heightPercentageToDP(5),
         width: widthPercentageToDP(10),
-        borderRadius:widthPercentageToDP(50),
-        marginRight:widthPercentageToDP(3),
+      },
+      backContainer: {
+        position: 'absolute',
+        top: heightPercentageToDP(1),
+        left: widthPercentageToDP(3),
+      },
+      sellerImg: {
+        height: heightPercentageToDP(5),
+        width: widthPercentageToDP(10),
+        borderRadius: widthPercentageToDP(50),
+        marginRight: widthPercentageToDP(3),
       },
       nameText: {
         color: theme.colors.primaryText,
@@ -59,8 +68,8 @@ export const useStyle = () => {
         fontFamily: theme.fonts.semiBoldFont,
         fontSize: widthPercentageToDP(2.8),
       },
-      ratingContainer:{
-marginLeft:widthPercentageToDP(2)
+      ratingContainer: {
+        marginLeft: widthPercentageToDP(2),
       },
       reviewText: {
         color: theme.colors.dullBlack,
@@ -95,13 +104,13 @@ marginLeft:widthPercentageToDP(2)
         borderRadius: widthPercentageToDP(9),
         backgroundColor: theme.colors.greyBackground,
       },
-      messageContainer:{
-          paddingHorizontal:widthPercentageToDP(1.5),
-          paddingVertical:heightPercentageToDP(0.4),
-          borderWidth:widthPercentageToDP(0.4),
-          borderRadius:widthPercentageToDP(1.4),
-          borderColor:theme.colors.dullGreyBackground,
-          backgroundColor:theme.colors.dullGreyBackground
+      messageContainer: {
+        paddingHorizontal: widthPercentageToDP(1.5),
+        paddingVertical: heightPercentageToDP(0.4),
+        borderWidth: widthPercentageToDP(0.4),
+        borderRadius: widthPercentageToDP(1.4),
+        borderColor: theme.colors.dullGreyBackground,
+        backgroundColor: theme.colors.dullGreyBackground,
       },
       messageText: {
         color: theme.colors.primaryText,
@@ -148,11 +157,11 @@ marginLeft:widthPercentageToDP(2)
         alignSelf: 'center',
       },
       sellerContainer: {
-        marginTop:heightPercentageToDP(0.5),
+        marginTop: heightPercentageToDP(0.5),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent:'space-between',
-        marginBottom:heightPercentageToDP(2)
+        justifyContent: 'space-between',
+        marginBottom: heightPercentageToDP(2),
       },
       row: {
         flexDirection: 'row',
@@ -178,16 +187,16 @@ marginLeft:widthPercentageToDP(2)
         borderTopStartRadius: widthPercentageToDP(10),
         borderTopEndRadius: widthPercentageToDP(10),
         paddingBottom: heightPercentageToDP(3),
-        paddingTop:heightPercentageToDP(1),
+        paddingTop: heightPercentageToDP(1),
         position: 'absolute',
         bottom: 0,
       },
-      topIndicator:{
-        borderWidth:widthPercentageToDP(0.4),
-        borderColor:theme.colors.greyDot,
-        alignSelf:'center',
-        paddingHorizontal:widthPercentageToDP(5),
-        marginBottom:heightPercentageToDP(2)
+      topIndicator: {
+        borderWidth: widthPercentageToDP(0.4),
+        borderColor: theme.colors.greyDot,
+        alignSelf: 'center',
+        paddingHorizontal: widthPercentageToDP(5),
+        marginBottom: heightPercentageToDP(2),
       },
       sortText: {
         alignSelf: 'center',
@@ -208,8 +217,8 @@ marginLeft:widthPercentageToDP(2)
       },
       applyButton: {
         width: widthPercentageToDP(94),
-        alignSelf:'center',
-        marginTop:heightPercentageToDP(3),
+        alignSelf: 'center',
+        marginTop: heightPercentageToDP(3),
       },
       controller: {marginTop: heightPercentageToDP(3.5)},
       error: {
