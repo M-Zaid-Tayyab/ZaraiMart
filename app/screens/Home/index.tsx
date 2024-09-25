@@ -25,6 +25,7 @@ import images from '../../config/images';
 import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {formateErrorMessage} from '../../utils/helperFunctions';
 import {useStyle} from './styles';
+import EmptyComponent from '../../components/EmptyComponent';
 
 const Home: React.FC = () => {
   const styles = useStyle();
@@ -232,6 +233,7 @@ const Home: React.FC = () => {
               horizontal
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
+              ListEmptyComponent={EmptyComponent}
             />
           )}
 
@@ -261,6 +263,7 @@ const Home: React.FC = () => {
               horizontal
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
+              ListEmptyComponent={EmptyComponent}
             />
           )}
         </ScrollView>

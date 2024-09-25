@@ -120,6 +120,9 @@ const EditProduct: React.FC = ({route}) => {
         uri => uri !== null && !uri.startsWith('http'),
       );
       const oldImages = crop.images.filter(url => !allImages.includes(url));
+      const oldImagesToKeep = Object.values(imageURIs).filter(
+        uri => uri !== null && uri.startsWith('http'),
+      );
       if (
         (data?.title === crop?.title || !data?.title) &&
         (data?.price === crop?.price || !data?.price) &&
@@ -168,28 +171,24 @@ const EditProduct: React.FC = ({route}) => {
         payload['unit'] = unitValue;
       }
 
-      if (newImages.length != 0) {
+      if (newImages.length != 0 || oldImagesToKeep.length != 0) {
         const imageUrls = await uploadImages(newImages);
-        payload['images'] = imageUrls;
+        payload['images'] = oldImagesToKeep.concat(imageUrls);
       }
-      console.log(payload);
-      if (Object.keys.length != 0) {
-        for (const element of oldImages) {
-          const oldProfileRef = storage().refFromURL(element);
-          await oldProfileRef.delete();
-        }
-        const cropRef = firestore().collection('crops').doc(crop?.id);
-        await cropRef.update({
-          ...payload,
-          updatedAt: firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Crop successfully updated!');
+      for (const element of oldImages) {
+        const oldProfileRef = storage().refFromURL(element);
+        await oldProfileRef.delete();
       }
+      const cropRef = firestore().collection('crops').doc(crop?.id);
+      await cropRef.update({
+        ...payload,
+        updatedAt: firestore.FieldValue.serverTimestamp(),
+      });
+      navigation.goBack();
     } catch (error) {
       dispatch(enableSnackbar(error.message));
     } finally {
       setIsLoading(false);
-      navigation.goBack();
     }
   };
   const deleteProduct = async () => {
@@ -197,6 +196,10 @@ const EditProduct: React.FC = ({route}) => {
     setIsDeleteLoading(true);
     try {
       const cropRef = firestore().collection('crops').doc(crop?.id);
+      for (const element of crop?.images) {
+        const oldProfileRef = storage().refFromURL(element);
+        await oldProfileRef.delete();
+      }
       await cropRef.delete();
     } catch (error) {
       dispatch(enableSnackbar(formateErrorMessage(error.message)));
@@ -205,7 +208,6 @@ const EditProduct: React.FC = ({route}) => {
       navigation.goBack();
     }
   };
-
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -224,7 +226,7 @@ const EditProduct: React.FC = ({route}) => {
             </Pressable>
             <Text style={styles.header}>Edit Product</Text>
           </View>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={deleteProduct}>
             <FastImage
               resizeMode="contain"
               source={images.Product.redDelete}
