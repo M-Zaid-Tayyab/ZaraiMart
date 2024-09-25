@@ -31,7 +31,7 @@ const SeeAll: React.FC = ({route}) => {
       rating={item?.rating}
       noOfSold={item?.noOfSold}
       price={item?.price}
-      onPress={() => navigation.navigate('Crop')}
+      onPress={() => navigation.navigate('Crop',{cropId:item?.id})}
     />
   );
   const getSortedCrops = async () => {

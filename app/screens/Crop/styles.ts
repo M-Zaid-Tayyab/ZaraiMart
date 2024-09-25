@@ -31,6 +31,7 @@ export const useStyle = () => {
       star: {
         height: heightPercentageToDP(3),
         width: widthPercentageToDP(5),
+        marginLeft:widthPercentageToDP(2)
       },
       sellerImg:{
         height: heightPercentageToDP(5),
@@ -47,19 +48,19 @@ export const useStyle = () => {
         marginTop: heightPercentageToDP(1),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
       },
       reviewContainer: {
         marginVertical: heightPercentageToDP(1.5),
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width: widthPercentageToDP(55),
       },
       soldText: {
         color: theme.colors.primaryButton,
         fontFamily: theme.fonts.semiBoldFont,
         fontSize: widthPercentageToDP(2.8),
+      },
+      ratingContainer:{
+marginLeft:widthPercentageToDP(2)
       },
       reviewText: {
         color: theme.colors.dullBlack,

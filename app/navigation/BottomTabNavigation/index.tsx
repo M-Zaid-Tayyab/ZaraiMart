@@ -37,6 +37,7 @@ const BottomTabNavigation = () => {
     tabBarActiveTintColor: theme.colors.primaryButton,
     tabBarStyle: style.tabbar,
     tabBarInactiveTintColor: theme.colors.placeholderText,
+    tabBarHideOnKeyboard: true,
   };
 
   return (

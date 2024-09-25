@@ -51,7 +51,7 @@ const Home: React.FC = () => {
       noOfSold={item?.noOfSold}
       price={item?.price}
       isSpecialOffer={true}
-      onPress={() => navigation.navigate('Crop')}
+      onPress={() => navigation.navigate('Crop',{cropId:item?.id})}
     />
   );
   const renderMostPopularCrops = ({item}) => (
@@ -62,7 +62,7 @@ const Home: React.FC = () => {
       rating={item?.rating}
       noOfSold={item?.noOfSold}
       price={item?.price}
-      onPress={() => navigation.navigate('Crop')}
+      onPress={() => navigation.navigate('Crop',{cropId:item?.id})}
     />
   );
   const getSortedCrops = async () => {
