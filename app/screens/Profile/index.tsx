@@ -1,35 +1,38 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import React, { useLayoutEffect, useState } from 'react';
+import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { CommonActions } from '@react-navigation/native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Modal from 'react-native-modal';
-import {useTheme} from 'react-native-paper';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
-import {useDispatch, useSelector} from 'react-redux';
+import { useTheme } from 'react-native-paper';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
+import LoadingModal from '../../components/LoadingModal';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import {useStyle} from './styles';
-import {saveUser} from '../../redux/slices/userSlice';
-import {enableSnackbar} from '../../redux/slices/snackbarSlice';
-import {formateErrorMessage} from '../../utils/helperFunctions';
-import LoadingModal from '../../components/LoadingModal';
+import { enableSnackbar } from '../../redux/slices/snackbarSlice';
+import { saveUser } from '../../redux/slices/userSlice';
+import { formateErrorMessage } from '../../utils/helperFunctions';
+import { useStyle } from './styles';
 
 const Profile: React.FC = () => {
   const styles = useStyle();
   const user = useSelector(state => state.userReducer.user);
   const theme = useTheme();
   const dispatch = useDispatch();
-  const userImg = useSelector(state => state.userReducer.profileImg);
-  const [selectedImg, setSelectedImg] = useState(user?.profileUrl || '');
+  const [selectedImg, setSelectedImg] = useState('');
   const navigation = useNavigation<any>();
   const [isModalVisible, setModalVisible] = useState(false);
   const [whichModal, setWhichModal] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const isFocused = useIsFocused();
+  useLayoutEffect(() => {
+    if (isFocused) setSelectedImg(user?.profileUrl);
+  }, [isFocused]);
   const Option = props => (
     <Pressable style={styles.rowContainer} onPress={props?.onPress}>
       <View style={styles.row}>
@@ -81,8 +84,14 @@ const Profile: React.FC = () => {
   };
   const onLogoutPress = () => {
     setModalVisible(!isModalVisible);
-    navigation.navigate('Login');
     dispatch(saveUser(null));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0, 
+        routes: [{ name: 'Home' }],
+      })
+    );
+    navigation.navigate('Login');
   };
   const handleProfilePictureUpdate = async (newImageUri, userId) => {
     try {

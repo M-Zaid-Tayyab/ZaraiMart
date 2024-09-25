@@ -37,7 +37,7 @@ const OrderCard: React.FC<Props> = props => {
                 props?.fromModal && {marginTop: heightPercentageToDP(0.5)},
                 styles.priceText,
               ]}>
-              Rs {props?.price}/kg
+              Rs {props?.price}
             </Text>
             {props?.pending ? (
               <Pressable onPress={props?.onPress}>

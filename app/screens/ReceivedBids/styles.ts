@@ -55,6 +55,9 @@ export const useStyle = () => {
         marginTop:heightPercentageToDP(2),
         borderRadius: widthPercentageToDP(3),
       },
+      flatListContainer:{
+        paddingBottom:heightPercentageToDP(15)
+      }
     });
   return React.useMemo(() => styles(), []);
 };

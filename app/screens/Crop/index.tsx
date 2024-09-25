@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Platform,
   SafeAreaView,
   ScrollView,
   Text,
@@ -25,7 +26,8 @@ import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import firestore from '@react-native-firebase/firestore';
 import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {formateErrorMessage} from '../../utils/helperFunctions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import LoadingModal from '../../components/LoadingModal';
 const Crop: React.FC = ({route}) => {
   const {cropId} = route?.params;
   const styles = useStyle();
@@ -36,7 +38,9 @@ const Crop: React.FC = ({route}) => {
   const {control, handleSubmit, formState, watch, setValue} = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [cropDetails, setCropDetails] = useState();
+  const [isBidLoading, setIsBidLoading] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector(state => state.userReducer.user);
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -72,13 +76,54 @@ const Crop: React.FC = ({route}) => {
   useEffect(() => {
     getCropData();
   }, []);
+  const placeBidOnCrop = async (data: any) => {
+    setModalVisible(false);
+    try {
+      const cropDoc = await firestore().collection('crops').doc(cropId).get();
+
+      if (cropDoc.exists) {
+        const cropData = cropDoc.data();
+        if (cropData.userId.id === user?.uid) {
+          dispatch(enableSnackbar('You cannot bid on your own crop.'));
+          return;
+        }
+        setIsBidLoading(true);
+        const bidData = {
+          amount: data?.price,
+          bidderId: user.uid,
+          location: data?.location,
+          quantity: data?.quantity,
+          description: data?.description,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        };
+        await firestore()
+          .collection('crops')
+          .doc(cropId)
+          .collection('bids')
+          .add(bidData);
+
+        dispatch(enableSnackbar('Bid placed successfully'));
+        navigation.goBack();
+      }
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsBidLoading(false);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       {isLoading ? (
         <ActivityIndicator
           color={theme.colors.primaryButton}
-          style={{alignSelf: 'center'}}
-          size={widthPercentageToDP(11)}></ActivityIndicator>
+          style={{
+            alignSelf: 'center',
+            marginTop: Platform.OS == 'ios' ? heightPercentageToDP(1) : 0,
+          }}
+          size={
+            Platform.OS == 'ios' ? 'large' : widthPercentageToDP(11)
+          }></ActivityIndicator>
       ) : (
         <>
           <View style={{height: heightPercentageToDP(52)}}>
@@ -97,7 +142,9 @@ const Crop: React.FC = ({route}) => {
                 minimumViewTime: 200,
               }}
             />
-            <TouchableOpacity onPress={()=>navigation.goBack()} style={styles.backContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backContainer}>
               <FastImage
                 source={images.ForgotPassword.backButton}
                 style={styles.back}
@@ -188,7 +235,6 @@ const Crop: React.FC = ({route}) => {
           </View>
         </>
       )}
-
       <Modal
         isVisible={isModalVisible}
         onBackButtonPress={toggleModal}
@@ -206,6 +252,10 @@ const Crop: React.FC = ({route}) => {
               control={control}
               rules={{
                 required: true,
+                min: {
+                  value: cropDetails?.price,
+                  message: 'Offered price must be higher than minimum price', // Custom error message
+                },
               }}
               render={({field: {onChange, value}}) => (
                 <InputBoxWithIcon
@@ -222,8 +272,10 @@ const Crop: React.FC = ({route}) => {
             />
 
             {formState.errors.price && (
-              <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
-                Price is required
+              <Text style={[styles.error, {maxWidth: widthPercentageToDP(80)}]}>
+                {formState.errors.price.type === 'required'
+                  ? 'Price is required'
+                  : formState.errors.price.message}
               </Text>
             )}
           </View>
@@ -257,6 +309,10 @@ const Crop: React.FC = ({route}) => {
               control={control}
               rules={{
                 required: true,
+                max: {
+                  value: cropDetails?.quantity,
+                  message: "Required quantity can't exceed total quantity",
+                },
               }}
               render={({field: {onChange, value}}) => (
                 <InputBoxWithIcon
@@ -272,8 +328,10 @@ const Crop: React.FC = ({route}) => {
             />
 
             {formState.errors.quantity && (
-              <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
-                Quantity is required
+              <Text style={[styles.error, {maxWidth: widthPercentageToDP(80)}]}>
+                {formState.errors.quantity.type === 'required'
+                  ? 'Quantity is required'
+                  : formState.errors.quantity.message}
               </Text>
             )}
           </View>
@@ -300,7 +358,7 @@ const Crop: React.FC = ({route}) => {
               name="description"
             />
             {formState.errors.description && (
-              <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
+              <Text style={[styles.error, {maxWidth: widthPercentageToDP(80)}]}>
                 {formState.errors.description.type === 'required'
                   ? 'Description is required'
                   : 'Description must be 20 characters'}
@@ -308,12 +366,13 @@ const Crop: React.FC = ({route}) => {
             )}
           </View>
           <PrimaryButton
-            onPress={toggleModal}
+            onPress={handleSubmit(placeBidOnCrop)}
             style={styles.applyButton}
             title="Proceed"
           />
         </View>
       </Modal>
+      <LoadingModal visible={isBidLoading} />
     </ScrollView>
   );
 };
