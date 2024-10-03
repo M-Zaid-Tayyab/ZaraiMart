@@ -20,6 +20,12 @@ export const useStyle = () => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginTop:heightPercentageToDP(0.6)
+      },
+      centerSpace: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       },
       rowContainer: {
         flexDirection: 'row',
@@ -60,8 +66,8 @@ export const useStyle = () => {
         fontSize: widthPercentageToDP(3.5),
       },
       sellerImg: {
-        height: heightPercentageToDP(3),
-        width: widthPercentageToDP(6),
+        height: widthPercentageToDP(7),
+        width: widthPercentageToDP(7),
         borderRadius: widthPercentageToDP(50),
         marginRight: widthPercentageToDP(1.5),
       },
@@ -100,6 +106,18 @@ export const useStyle = () => {
         fontFamily: theme.fonts.boldFont,
         fontSize: widthPercentageToDP(3.1),
       },
+      penContainer:{
+        backgroundColor: theme.colors.primaryButton,
+        paddingHorizontal: widthPercentageToDP(1.5),
+        paddingVertical: widthPercentageToDP(1.5),
+        borderRadius: widthPercentageToDP(1),
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      pen:{
+        width: widthPercentageToDP(3),
+        height: heightPercentageToDP(1.5),
+      }
     });
   return React.useMemo(() => styles(), []);
 };

@@ -14,6 +14,7 @@ import Header from '../../components/Header';
 import firestore from '@react-native-firebase/firestore';
 import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {formateErrorMessage} from '../../utils/helperFunctions';
+import EmptyComponent from '../../components/EmptyComponent';
 const MyProducts: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -80,6 +81,7 @@ const MyProducts: React.FC = () => {
               numColumns={2}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
+              ListEmptyComponent={EmptyComponent}
             />
           </View>
         )}

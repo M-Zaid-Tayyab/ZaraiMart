@@ -67,6 +67,7 @@ const images = {
     leave: require('../assets/Order/leave.png'),
     ratingStar: require('../assets/Order/ratingStar.png'),
     greenStar: require('../assets/Order/greenStar.png'),
+    pen: require('../assets/Order/pen.png'),
   },
   Profile: {
     pen: require('../assets/Profile/pen.png'),

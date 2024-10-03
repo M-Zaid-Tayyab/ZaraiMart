@@ -57,7 +57,31 @@ export const useStyle = () => {
       },
       flatListContainer:{
         paddingBottom:heightPercentageToDP(15)
-      }
+      },
+      modalView: {
+        backgroundColor: theme.colors.greyBackground,
+        paddingHorizontal: widthPercentageToDP(3),
+        width: widthPercentageToDP(100),
+        borderTopStartRadius: widthPercentageToDP(10),
+        borderTopEndRadius: widthPercentageToDP(10),
+        paddingBottom: heightPercentageToDP(3),
+        paddingTop: heightPercentageToDP(1),
+        position: 'absolute',
+        bottom: 0,
+      },
+      reviewHeading: {
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.boldFont,
+        fontSize: widthPercentageToDP(4.8),
+        alignSelf: 'center',
+      },
+      topIndicator: {
+        borderWidth: widthPercentageToDP(0.4),
+        borderColor: theme.colors.greyDot,
+        alignSelf: 'center',
+        paddingHorizontal: widthPercentageToDP(5),
+        marginBottom: heightPercentageToDP(2),
+      },
     });
   return React.useMemo(() => styles(), []);
 };

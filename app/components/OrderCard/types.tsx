@@ -13,4 +13,6 @@ export interface Props {
   sellerImg?:any;
   fromModal?:boolean;
   onPress?:()=> void;
+  rightIcn?:any;
+  onRightIcnPress?:()=> void;
 }

@@ -1,20 +1,32 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {SafeAreaView, Text, View, FlatList} from 'react-native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  SafeAreaView,
+  Text,
+  View,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import Modal from 'react-native-modal';
 import {useTheme} from 'react-native-paper';
-import {useStyle} from './styles';
-import OrderCard from '../../components/OrderCard';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {dummyOrderData} from '../../utils/dummyData';
-import Modal from 'react-native-modal';
 import StarRating from 'react-native-star-rating-widget';
-import FastImage from 'react-native-fast-image';
-import images from '../../config/images';
+import {useDispatch, useSelector} from 'react-redux';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
+import OrderCard from '../../components/OrderCard';
 import PrimaryButton from '../../components/PrimaryButton';
+import images from '../../config/images';
+import {dummyOrderData} from '../../utils/dummyData';
+import {useStyle} from './styles';
+import firestore from '@react-native-firebase/firestore';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import EmptyComponent from '../../components/EmptyComponent';
 const CompletedOrders: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -22,30 +34,95 @@ const CompletedOrders: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
+  const isFocused = useIsFocused();
+  const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const user = useSelector(state => state.userReducer.user);
+  const dispatch = useDispatch();
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const renderOrders = ({item}) => (
     <OrderCard
       style={styles.orderCardStyle}
-      imageUrl={{uri: item?.imageUrl}}
-      cropName={item?.cropName}
+      imageUrl={{uri: item?.cropData?.images?.[0]}}
+      cropName={item?.cropData?.title}
       price={item?.price}
       status={'completed'}
       quantity={item?.quantity}
-      onPress={toggleModal}
-      sellerName="Seller"
-      sellerImg={images.Home.userPlaceholder}
+      onPress={() => {}}
+      sellerName={item?.seller?.name}
+      sellerImg={
+        item?.seller?.profileUrl
+          ? {uri: item?.seller?.profileUrl}
+          : images.Home.userPlaceholder
+      }
     />
   );
+  const getCompletedOrders = async () => {
+    try {
+      setIsLoading(true);
+      const ordersSnapshot = await firestore()
+        .collection('orders')
+        .where('status', '==', 'Completed')
+        .get();
+      const completedOrders = [];
+      for (const doc of ordersSnapshot.docs) {
+        const orderData = doc.data();
+        if (
+          orderData?.buyerId == user?.uid ||
+          orderData?.sellerId == user?.uid
+        ) {
+          const cropSnapshot = await firestore()
+            .collection('crops')
+            .doc(orderData?.cropId)
+            .get();
+          const cropData = cropSnapshot.data();
+          const sellerSnapshot = await firestore()
+            .collection('users')
+            .doc(orderData?.sellerId)
+            .get();
+          const sellerData = sellerSnapshot.data();
+          completedOrders.push({
+            orderId: doc.id,
+            ...orderData,
+            seller: sellerData,
+            cropData: cropData,
+          });
+        }
+      }
+      setOrders(completedOrders);
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isFocused) getCompletedOrders();
+  }, [isFocused]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-        <FlatList
-          data={dummyOrderData}
-          renderItem={renderOrders}
-          showsVerticalScrollIndicator={false}
-        />
+        {isLoading ? (
+          <ActivityIndicator
+            color={theme.colors.primaryButton}
+            style={{
+              alignSelf: 'center',
+              marginTop: heightPercentageToDP(1),
+            }}
+            size={
+              Platform.OS == 'ios' ? 'large' : widthPercentageToDP(11)
+            }></ActivityIndicator>
+        ) : (
+          <FlatList
+            data={orders}
+            renderItem={renderOrders}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={EmptyComponent}
+          />
+        )}
         <Modal
           isVisible={isModalVisible}
           onBackButtonPress={toggleModal}

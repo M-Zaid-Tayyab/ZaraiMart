@@ -1,11 +1,14 @@
 import React from 'react';
-import {Pressable, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useTheme} from 'react-native-paper';
 import images from '../../config/images';
 import {useStyle} from './style';
 import {Props} from './types';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 const OrderCard: React.FC<Props> = props => {
   const styles = useStyle();
   const theme = useTheme();
@@ -19,14 +22,27 @@ const OrderCard: React.FC<Props> = props => {
           resizeMode="cover"
         />
         <View style={styles.txtContainer}>
-          <Text style={styles.nameText}>{props?.cropName}</Text>
+          <View style={styles.centerSpace}>
+            <Text style={styles.nameText}>{props?.cropName}</Text>
+            {props?.rightIcn && (
+              <TouchableOpacity
+                style={styles.penContainer}
+                onPress={props?.onRightIcnPress}>
+                <Image
+                  source={props?.rightIcn}
+                  style={styles.pen}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
           <Text style={styles.qtText}>Qty = {props?.quantity}</Text>
           <View style={styles.sellerContainer}>
             <View style={styles.row}>
               <FastImage
                 source={props?.sellerImg}
                 style={styles.sellerImg}
-                resizeMode="contain"
+                resizeMode="cover"
               />
               <Text style={styles.headingText}>{props?.sellerName}</Text>
             </View>
@@ -47,21 +63,21 @@ const OrderCard: React.FC<Props> = props => {
                   resizeMode="contain"
                 />
               </Pressable>
-            ) : !props?.fromModal ? props?.status!="active" ?
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={props?.onPress}>
-                <Text style={styles.buttonText}>
-                  {props?.status === 'active'
-                    ? 'Track Order'
-                    : 'Leave a review'}
-                </Text>
-              </TouchableOpacity>
-              :
-              <Text style={styles.greenText}>
-                In delivery
-              </Text>
-             : undefined}
+            ) : !props?.fromModal ? (
+              props?.status != 'active' ? (
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={props?.onPress}>
+                  <Text style={styles.buttonText}>
+                    {props?.status === 'active'
+                      ? 'Track Order'
+                      : 'Leave a review'}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <Text style={styles.greenText}>In delivery</Text>
+              )
+            ) : undefined}
           </View>
         </View>
       </View>
