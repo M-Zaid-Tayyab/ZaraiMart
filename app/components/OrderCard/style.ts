@@ -20,7 +20,6 @@ export const useStyle = () => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop:heightPercentageToDP(0.6)
       },
       centerSpace: {
         flexDirection: 'row',
@@ -36,8 +35,8 @@ export const useStyle = () => {
       },
       cropImage: {
         borderRadius: widthPercentageToDP(6),
-        width: widthPercentageToDP(28),
-        height: heightPercentageToDP(13),
+        width: widthPercentageToDP(30),
+        height: heightPercentageToDP(14),
       },
       nameText: {
         fontFamily: theme.fonts.boldFont,
@@ -57,7 +56,7 @@ export const useStyle = () => {
       },
       greenText:{
         fontFamily: theme.fonts.boldFont,
-        // color: theme.colors.dullBlack,
+        color: theme.colors.dullBlack,
         fontSize: widthPercentageToDP(3.7),
       },
       headingText: {
@@ -83,6 +82,7 @@ export const useStyle = () => {
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
+        marginVertical:heightPercentageToDP(1)
       },
       statusText: {
         fontFamily: theme.fonts.semiBoldFont,

@@ -105,7 +105,7 @@ const InputBoxWithIcon: React.FC<Props> = props => {
                   ? props?.width - widthPercentageToDP(8)
                   : widthPercentageToDP(67),
                 includeFontPadding: false,
-                color: 'grey',
+                color: props?.showPrimary?theme.colors.primaryText:'grey',
                 textAlign: 'left',
               },
             ]}>

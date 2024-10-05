@@ -196,12 +196,6 @@ const Profile: React.FC = () => {
           title="Logout"
           onPress={handleLogout}
         />
-        <Option
-          leftIcon={images.Profile.delete}
-          allRed
-          onPress={handleDeleteAccount}
-          title="Delete Account"
-        />
       </View>
       <Modal
         isVisible={isModalVisible}

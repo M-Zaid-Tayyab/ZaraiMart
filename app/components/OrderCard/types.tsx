@@ -12,7 +12,9 @@ export interface Props {
   sellerName?:string;
   sellerImg?:any;
   fromModal?:boolean;
+  deadline?:any;
   onPress?:()=> void;
   rightIcn?:any;
   onRightIcnPress?:()=> void;
+  onItemPress?:()=> void;
 }

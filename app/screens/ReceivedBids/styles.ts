@@ -82,6 +82,16 @@ export const useStyle = () => {
         paddingHorizontal: widthPercentageToDP(5),
         marginBottom: heightPercentageToDP(2),
       },
+      controller: {marginTop: heightPercentageToDP(2)},
+      error: {
+        color: 'red',
+        paddingVertical: heightPercentageToDP(0.5),
+        fontSize: isTablet() ? widthPercentageToDP(2) : undefined,
+        marginLeft:widthPercentageToDP(1)
+      },
+      inputStyle:{
+        backgroundColor:'white'
+      }
     });
   return React.useMemo(() => styles(), []);
 };

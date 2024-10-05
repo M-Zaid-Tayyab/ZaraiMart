@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,18 +8,18 @@ import {
   SafeAreaView,
   View,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import EmptyComponent from '../../components/EmptyComponent';
 import OrderCard from '../../components/OrderCard';
 import images from '../../config/images';
-import { enableSnackbar } from '../../redux/slices/snackbarSlice';
-import { formateErrorMessage } from '../../utils/helperFunctions';
-import { useStyle } from './styles';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import {useStyle} from './styles';
 const ActiveOrders: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -29,6 +29,20 @@ const ActiveOrders: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
+  const getDaysLeft = (deadline) => {
+    const deadlineDate = new Date(deadline);
+    const currentDate = new Date();
+    const timeDiff = deadlineDate - currentDate; 
+    if (timeDiff <= 0) {
+      return 'Over due';
+    }
+  
+    const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  
+    if (daysLeft > 0) {
+      return `${daysLeft} day(s) left`;
+    }
+  };
   const renderOrders = ({item}) => (
     <OrderCard
       style={styles.orderCardStyle}
@@ -36,10 +50,11 @@ const ActiveOrders: React.FC = () => {
       cropName={item?.cropData?.title}
       price={item?.price}
       status={'active'}
-      rightIcn={item?.sellerId==user?.uid ? images.Order.pen:undefined}
-      onRightIcnPress={()=>{}}
       quantity={item?.quantity}
-      onPress={() => {}}
+      deadline={getDaysLeft(item?.deadline)}
+      onItemPress={() => {
+        navigation.navigate('EditOrder', {item: item});
+      }}
       sellerName={item?.seller?.name}
       sellerImg={
         item?.seller?.profileUrl

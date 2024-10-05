@@ -20,7 +20,7 @@ export const useStyle = () => {
         paddingTop: heightPercentageToDP(1),
         paddingHorizontal: widthPercentageToDP(3),
       },
-      controller: {marginTop: heightPercentageToDP(3.5)},
+      controller: {marginTop: heightPercentageToDP(2)},
       error: {
         color: 'red',
         paddingVertical: heightPercentageToDP(0.5),
@@ -28,12 +28,12 @@ export const useStyle = () => {
       },
       inputStyle: {
         paddingVertical: heightPercentageToDP(1.5),
-        width: widthPercentageToDP(83),
+        width: widthPercentageToDP(90),
       },
       addImg: {
         width: widthPercentageToDP(30),
         height: heightPercentageToDP(15),
-        alignSelf:'center',
+        alignSelf: 'center',
       },
       imgPlaceholder: {
         width: widthPercentageToDP(11),
@@ -68,7 +68,7 @@ export const useStyle = () => {
         fontSize: widthPercentageToDP(4),
         fontFamily: theme.fonts.semiBoldFont,
         color: theme.colors.primaryText,
-        alignSelf:'center',
+        alignSelf: 'center',
       },
       button: {
         marginVertical: heightPercentageToDP(5),
@@ -80,63 +80,66 @@ export const useStyle = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
       },
-      header:{
+      header: {
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.boldFont,
         fontSize: widthPercentageToDP(5.6),
-        marginLeft:widthPercentageToDP(4),
+        marginLeft: widthPercentageToDP(4),
       },
       space: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop:heightPercentageToDP(0.3),
-        marginBottom:heightPercentageToDP(2),
+        marginTop: heightPercentageToDP(0.3),
+        marginBottom: heightPercentageToDP(2),
       },
       selectedImgContainer: {
         flexDirection: 'row',
       },
-
+      backIcn: {
+        width: widthPercentageToDP(8),
+        height: heightPercentageToDP(4),
+      },
       dropdown: {
-        marginTop:heightPercentageToDP(3.5),
-        paddingVertical: heightPercentageToDP(Platform.OS=='ios'?1.2:1.7),
+        marginTop: heightPercentageToDP(2),
+        paddingVertical: heightPercentageToDP(Platform.OS=='ios'?1.5:1.7),
         borderColor: theme.colors.borderColor,
         borderWidth: widthPercentageToDP(0.2),
         borderRadius: widthPercentageToDP(3),
         paddingHorizontal: widthPercentageToDP(4),
-        backgroundColor:theme.colors.textViewBackground,
+        backgroundColor: theme.colors.textViewBackground,
       },
       placeholderStyle: {
-        color:theme.colors.placeholderText,
-        fontFamily:theme.fonts.regularFont,
-        fontSize:widthPercentageToDP(3.5),
+        color: theme.colors.placeholderText,
+        fontFamily: theme.fonts.regularFont,
+        fontSize: widthPercentageToDP(3.5),
       },
       selectedTextStyle: {
-        color:theme.colors.primaryText,
-        fontFamily:theme.fonts.regularFont,
-        fontSize:widthPercentageToDP(3.7),
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.regularFont,
+        fontSize: widthPercentageToDP(3.7),
       },
       iconStyle: {
-        width:widthPercentageToDP(5),
-        height:heightPercentageToDP(2.5),
+        width: widthPercentageToDP(5),
+        height: heightPercentageToDP(2.5),
       },
       deleteIcon: {
-        width:widthPercentageToDP(5),
-        height:heightPercentageToDP(2.5),
+        width: widthPercentageToDP(5),
+        height: heightPercentageToDP(2.5),
       },
       inputSearchStyle: {
-        color:theme.colors.primaryText,
-        fontFamily:theme.fonts.regularFont,
-        fontSize:widthPercentageToDP(3.7),
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.regularFont,
+        fontSize: widthPercentageToDP(3.7),
         borderRadius: widthPercentageToDP(2),
       },
       containerStyle: {
         borderRadius: widthPercentageToDP(3),
-        height:heightPercentageToDP(22),
+        height: heightPercentageToDP(22),
       },
-      unitContainerStyle:{
+      unitContainerStyle: {
         borderRadius: widthPercentageToDP(3),
-        height:heightPercentageToDP(29),
+        height: heightPercentageToDP(29),
       },
       modalView: {
         backgroundColor: theme.colors.greyBackground,
@@ -154,19 +157,19 @@ export const useStyle = () => {
         fontFamily: theme.fonts.boldFont,
         fontSize: widthPercentageToDP(4.8),
         alignSelf: 'center',
-        textAlign:'center'
+        textAlign: 'center',
       },
       subHeading: {
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.regularFont,
         fontSize: widthPercentageToDP(4),
         alignSelf: 'center',
-        textAlign:'center'
+        textAlign: 'center',
       },
-      statusText:{
+      statusText: {
         fontFamily: theme.fonts.regularFont,
         fontSize: widthPercentageToDP(4.5),
-        marginLeft:widthPercentageToDP(2)
+        marginLeft: widthPercentageToDP(2),
       },
       lineSeperator: {
         borderWidth: widthPercentageToDP(0.15),
@@ -188,12 +191,12 @@ export const useStyle = () => {
       statusContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop:heightPercentageToDP(1.5)
+        marginTop: heightPercentageToDP(1.5),
       },
       topStatusContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop:heightPercentageToDP(3)
+        marginTop: heightPercentageToDP(3),
       },
       cancelButton: {
         backgroundColor: theme.colors.transparentGreenBackground,
@@ -207,19 +210,44 @@ export const useStyle = () => {
         paddingHorizontal: widthPercentageToDP(3),
         paddingVertical: heightPercentageToDP(2),
       },
-      outerCircle:{
-        paddingHorizontal:widthPercentageToDP(1.8),
-        paddingVertical:heightPercentageToDP(0.9),
-        borderRadius:widthPercentageToDP(50),
-        borderColor:theme.colors.primaryText,
-        borderWidth:widthPercentageToDP(0.4)
+      outerCircle: {
+        paddingHorizontal: widthPercentageToDP(1.8),
+        paddingVertical: heightPercentageToDP(0.9),
+        borderRadius: widthPercentageToDP(50),
+        borderColor: theme.colors.primaryText,
+        borderWidth: widthPercentageToDP(0.4),
       },
-      innerCircle:{
-        paddingHorizontal:widthPercentageToDP(1.4),
-        paddingVertical:heightPercentageToDP(0.7),
-        borderRadius:widthPercentageToDP(50),
-        backgroundColor:theme.colors.primaryButton,
-      }
+      innerCircle: {
+        paddingHorizontal: widthPercentageToDP(1.4),
+        paddingVertical: heightPercentageToDP(0.7),
+        borderRadius: widthPercentageToDP(50),
+        backgroundColor: theme.colors.primaryButton,
+      },
+      dotContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: heightPercentageToDP(1),
+        alignSelf: 'center',
+      },
+      longDot: {
+        paddingHorizontal: widthPercentageToDP(2.7),
+        paddingVertical: heightPercentageToDP(0.4),
+        borderRadius: widthPercentageToDP(3),
+        backgroundColor: theme.colors.primaryButton,
+        marginHorizontal: widthPercentageToDP(0.5),
+      },
+      shortDot: {
+        marginHorizontal: widthPercentageToDP(0.5),
+        paddingHorizontal: widthPercentageToDP(1),
+        paddingVertical: heightPercentageToDP(0.4),
+        borderRadius: widthPercentageToDP(3),
+        backgroundColor: theme.colors.greyDot,
+      },
+      img: {
+        height: heightPercentageToDP(47),
+        borderRadius:widthPercentageToDP(3),
+        width: widthPercentageToDP(94),
+      },
     });
   return React.useMemo(() => styles(), []);
 };

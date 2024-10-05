@@ -348,7 +348,7 @@ const Crop: React.FC = ({route}) => {
               render={({field: {onChange, value}}) => (
                 <InputBoxWithIcon
                   onChangeText={onChange}
-                  numberOfCharacter={40}
+                  numberOfCharacter={100}
                   value={value}
                   style={{width: widthPercentageToDP(94)}}
                   inputStyle={styles.inputStyle}

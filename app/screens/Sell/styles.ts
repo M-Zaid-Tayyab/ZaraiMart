@@ -85,7 +85,7 @@ export const useStyle = () => {
 
       dropdown: {
         marginTop:heightPercentageToDP(3.5),
-        paddingVertical:heightPercentageToDP(1),
+        paddingVertical: heightPercentageToDP(Platform.OS=='ios'?1.2:1.7),
         borderColor: theme.colors.borderColor,
         borderWidth: widthPercentageToDP(0.2),
         borderRadius: widthPercentageToDP(3),

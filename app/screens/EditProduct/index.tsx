@@ -449,7 +449,7 @@ const EditProduct: React.FC = ({route}) => {
         <View style={styles.controller}>
           <Controller
             control={control}
-            defaultValue={crop?.quantity}
+            defaultValue={crop.quantity.toString()}
             rules={{
               required: true,
             }}

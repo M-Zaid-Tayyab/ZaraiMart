@@ -14,28 +14,17 @@ const OrderCard: React.FC<Props> = props => {
   const theme = useTheme();
 
   return (
-    <View style={[styles.view, props.style]}>
+    <TouchableOpacity
+      onPress={props?.onItemPress}
+      style={[styles.view, props.style]}>
       <View style={styles.rowContainer}>
         <FastImage
           source={props?.imageUrl}
           style={styles.cropImage}
-          resizeMode="cover"
+          resizeMode="stretch"
         />
         <View style={styles.txtContainer}>
-          <View style={styles.centerSpace}>
-            <Text style={styles.nameText}>{props?.cropName}</Text>
-            {props?.rightIcn && (
-              <TouchableOpacity
-                style={styles.penContainer}
-                onPress={props?.onRightIcnPress}>
-                <Image
-                  source={props?.rightIcn}
-                  style={styles.pen}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
+          <Text style={styles.nameText}>{props?.cropName}</Text>
           <Text style={styles.qtText}>Qty = {props?.quantity}</Text>
           <View style={styles.sellerContainer}>
             <View style={styles.row}>
@@ -68,20 +57,16 @@ const OrderCard: React.FC<Props> = props => {
                 <TouchableOpacity
                   style={styles.buttonContainer}
                   onPress={props?.onPress}>
-                  <Text style={styles.buttonText}>
-                    {props?.status === 'active'
-                      ? 'Track Order'
-                      : 'Leave a review'}
-                  </Text>
+                  <Text style={styles.buttonText}>Leave a review</Text>
                 </TouchableOpacity>
               ) : (
-                <Text style={styles.greenText}>In delivery</Text>
+                <Text style={styles.greenText}>{props?.deadline}</Text>
               )
             ) : undefined}
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default OrderCard;

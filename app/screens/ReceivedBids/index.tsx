@@ -22,11 +22,15 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import EmptyComponent from '../../components/EmptyComponent';
 import LoadingModal from '../../components/LoadingModal';
 import Modal from 'react-native-modal';
+import InputBoxWithIcon from '../../components/InputBoxWithIcon';
+import {Controller, useForm} from 'react-hook-form';
 const ReceivedBids: React.FC = () => {
   const styles = useStyle();
+  const {control, handleSubmit, formState, watch, setValue} = useForm();
   const theme = useTheme();
   const navigation = useNavigation<any>();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isAcceptModalVisible, setIsAcceptModalVisible] = useState(false);
   const dispatch = useDispatch();
   const [bidsData, setBidsData] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -94,34 +98,39 @@ const ReceivedBids: React.FC = () => {
       setModalVisible(false);
     }
   };
-  const handleAcceptBid = async item => {
+  const handleAcceptBid = async(data) => {
+    const currentTime = new Date();
+    const deadline = new Date(currentTime.getTime() + data?.deadline * 24 * 60 * 60 * 1000);
+    setIsAcceptModalVisible(false);
     try {
-      if (item?.bidData.quantity > item?.cropData?.quantity) {
+      if (selectedItem?.bidData.quantity > selectedItem?.cropData?.quantity) {
         dispatch(
           enableSnackbar('Bid quantity exceeds available crop quantity.'),
         );
         return;
       }
-      setModalVisible(true);
       const batch = firestore().batch();
       const orderRef = firestore().collection('orders').doc();
       const orderData = {
         orderId: orderRef.id,
-        cropId: item?.cropId,
-        quantity: item?.bidData?.quantity,
-        price: item?.bidData?.amount,
-        buyerId: item?.bidData?.bidderId,
+        cropId: selectedItem?.cropId,
+        instruction: selectedItem?.bidData?.description,
+        quantity: selectedItem?.bidData?.quantity,
+        price: selectedItem?.bidData?.amount,
+        buyerId: selectedItem?.bidData?.bidderId,
+        location:selectedItem?.bidData?.location,
         sellerId: user?.uid,
         status: 'Active',
         createdAt: firestore.FieldValue.serverTimestamp(),
+        deadline: deadline.toISOString(),
       };
       batch.set(orderRef, orderData);
-      const cropRef = firestore().collection('crops').doc(item?.cropId);
+      const cropRef = firestore().collection('crops').doc(selectedItem?.cropId);
       batch.update(cropRef, {
-        quantity: firestore.FieldValue.increment(-item?.bidData?.quantity),
+        quantity: firestore.FieldValue.increment(-selectedItem?.bidData?.quantity),
       });
       await batch.commit();
-      deleteBid(item?.bidId, item?.cropId);
+      deleteBid(selectedItem?.bidId, selectedItem?.cropId);
       dispatch(enableSnackbar('Order has been created successfully!'));
     } catch (error) {
       console.log(error);
@@ -161,7 +170,10 @@ const ReceivedBids: React.FC = () => {
           />
           <PrimaryButton
             title="Accept"
-            onPress={() => handleAcceptBid(item)}
+            onPress={() => {
+              setSelectedItem(item);
+              setIsAcceptModalVisible(true);
+            }}
             style={styles.submitButton}
           />
         </View>
@@ -204,9 +216,10 @@ const ReceivedBids: React.FC = () => {
             price={selectedItem?.bidData?.amount}
             quantity={selectedItem?.bidData?.quantity}
             sellerName={selectedItem?.bidderData?.name}
-          sellerImg={
-            selectedItem?.bidderData?.profileUrs || images.Home.userPlaceholder
-          }
+            sellerImg={
+              selectedItem?.bidderData?.profileUrs ||
+              images.Home.userPlaceholder
+            }
             fromModal
           />
           <View style={styles.lineSeperator}></View>
@@ -220,6 +233,71 @@ const ReceivedBids: React.FC = () => {
             <PrimaryButton
               title="Yes, Cancel"
               onPress={deleteBid}
+              style={styles.submitButton}
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        isVisible={isAcceptModalVisible}
+        onBackButtonPress={toggleModal}
+        onBackdropPress={toggleModal}
+        style={{margin: 0}}>
+        <View style={styles.modalView}>
+          <View style={styles.topIndicator}></View>
+          <Text style={styles.reviewHeading}>Accept the Bid?</Text>
+          <View style={styles.lineSeperator}></View>
+          <OrderCard
+            style={styles.modelCartStyle}
+            imageUrl={{uri: selectedItem?.cropData?.images?.[0]}}
+            cropName={selectedItem?.cropData?.title}
+            price={selectedItem?.bidData?.amount}
+            quantity={selectedItem?.bidData?.quantity}
+            sellerName={selectedItem?.bidderData?.name}
+            sellerImg={
+              selectedItem?.bidderData?.profileUrs ||
+              images.Home.userPlaceholder
+            }
+            fromModal
+          />
+          <View style={styles.controller}>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({field: {onChange, value}}) => (
+                <InputBoxWithIcon
+                  onChangeText={onChange}
+                  inputStyle={styles.inputStyle}
+                  style={{width: widthPercentageToDP(94)}}
+                  numberOfCharacter={30}
+                  keyboardType="dialpad"
+                  value={value}
+                  placeholder="Deadline/days"
+                />
+              )}
+              name="deadline"
+            />
+
+            {formState.errors.deadline && (
+              <Text style={[styles.error, {maxWidth: widthPercentageToDP(43)}]}>
+                Deadline is required
+              </Text>
+            )}
+          </View>
+          <View style={styles.lineSeperator}></View>
+          <View style={styles.rowContainer}>
+            <PrimaryButton
+              title="Discard"
+              textStyle={{color: theme.colors.primaryButton}}
+              onPress={()=>setIsAcceptModalVisible(false)}
+              style={styles.cancelButton}
+            />
+            <PrimaryButton
+              title="Yes, Accept"
+              onPress={handleSubmit(handleAcceptBid)}
+
               style={styles.submitButton}
             />
           </View>
