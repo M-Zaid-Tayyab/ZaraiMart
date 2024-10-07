@@ -7,5 +7,8 @@ export interface Props {
   editable?:boolean;
   quantity?: any;
   imageUrl?: any;
+  checkout?:boolean;
+  sellerImg?:any;
   onPress?:()=> void;
+  sellerName?:string;
 }

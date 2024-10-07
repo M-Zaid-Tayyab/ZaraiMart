@@ -28,7 +28,8 @@ const Cart: React.FC = () => {
       cropName={item?.cropName}
       price={item?.price}
       quantity={item?.quantity}
-      editable
+      // editable
+      checkout
       onPress={toggleModal}
     />
   );

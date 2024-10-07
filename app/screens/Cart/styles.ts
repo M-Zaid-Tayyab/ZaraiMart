@@ -14,7 +14,7 @@ export const useStyle = () => {
     StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: theme.colors.background,
+        backgroundColor:theme.colors.greyBackground,
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(3),

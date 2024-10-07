@@ -64,12 +64,12 @@ const BottomTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name="Checkout"
         component={Cart}
         options={{
           headerShown: false,
           tabBarLabel: ({focused, color}) => (
-            <CustomTabLabel focused={focused} label="Cart" color={color} />
+            <CustomTabLabel focused={focused} label="Checkout" color={color} />
           ),
           tabBarIcon: ({color, size, focused}) => (
             <FastImage

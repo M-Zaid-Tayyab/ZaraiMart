@@ -15,6 +15,7 @@ export const useStyle = () => {
         borderRadius: widthPercentageToDP(4),
         paddingHorizontal: widthPercentageToDP(3),
         paddingVertical: heightPercentageToDP(2),
+        marginTop:heightPercentageToDP(3)
       },
       flexrow: {
         flexDirection: 'row',
@@ -70,7 +71,28 @@ export const useStyle = () => {
         color:'white',
         fontFamily:theme.fonts.boldFont,
         fontSize:widthPercentageToDP(3.1),
-      }
+      },
+      row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      sellerContainer: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical:heightPercentageToDP(1)
+      },
+      headingText: {
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.semiBoldFont,
+        fontSize: widthPercentageToDP(3.5),
+      },
+      sellerImg: {
+        height: widthPercentageToDP(7),
+        width: widthPercentageToDP(7),
+        borderRadius: widthPercentageToDP(50),
+        marginRight: widthPercentageToDP(1.5),
+      },
     });
   return React.useMemo(() => styles(), []);
 };

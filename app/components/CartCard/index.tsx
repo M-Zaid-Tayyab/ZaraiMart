@@ -20,6 +20,16 @@ const CartCard: React.FC<Props> = props => {
         <View style={styles.txtContainer}>
           <Text style={styles.nameText}>{props?.cropName}</Text>
           <Text style={styles.priceText}>Rs {props?.price}/kg</Text>
+          <View style={styles.sellerContainer}>
+            <View style={styles.row}>
+              <FastImage
+                source={props?.sellerImg}
+                style={styles.sellerImg}
+                resizeMode="cover"
+              />
+              <Text style={styles.headingText}>{props?.sellerName}</Text>
+            </View>
+          </View>
           <View style={styles.flexrow}>
             <View style={styles.greyContainer}>
               <Text style={styles.qtText}>{props?.quantity} Kg</Text>
@@ -32,6 +42,13 @@ const CartCard: React.FC<Props> = props => {
                   resizeMode="contain"
                 />
               </Pressable>
+            )}
+            {props?.checkout && (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={props?.onPress}>
+                <Text style={styles.buttonText}>Checkout</Text>
+              </TouchableOpacity>
             )}
           </View>
         </View>
