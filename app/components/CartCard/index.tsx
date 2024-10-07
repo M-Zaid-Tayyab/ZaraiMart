@@ -10,7 +10,7 @@ const CartCard: React.FC<Props> = props => {
   const theme = useTheme();
 
   return (
-    <View style={[styles.view, props.style]}>
+    <TouchableOpacity onPress={props?.onItemPress} style={[styles.view, props.style]}>
       <View style={styles.rowContainer}>
         <FastImage
           source={props?.imageUrl}
@@ -53,7 +53,7 @@ const CartCard: React.FC<Props> = props => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default CartCard;

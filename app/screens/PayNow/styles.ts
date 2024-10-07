@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import {
+  heightPercentageToDP,
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
@@ -85,8 +86,8 @@ export const useStyle = () => {
       cardInput: {
         backgroundColor: theme.colors.textViewBackground,
         paddingHorizontal: wp(3),
-        paddingVertical: hp(1.8),
-        borderRadius: wp(2),
+        paddingVertical: hp(2),
+        borderRadius: wp(3),
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.regularFont,
         fontSize: wp(3.4),
@@ -102,6 +103,13 @@ export const useStyle = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
       },
+      error: {
+        color: 'red',
+        paddingVertical: heightPercentageToDP(0.5),
+      },
+      controller:{
+        marginTop:hp(2)
+      }
     });
   return React.useMemo(() => styles(), []);
 };

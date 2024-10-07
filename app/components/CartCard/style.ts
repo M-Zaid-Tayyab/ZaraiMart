@@ -32,8 +32,8 @@ export const useStyle = () => {
       },
       cropImage: {
         borderRadius:widthPercentageToDP(6),
-        width:widthPercentageToDP(28),
-        height:heightPercentageToDP(13)
+        width:widthPercentageToDP(30),
+        height:heightPercentageToDP(14)
       },
       deleteImage: {
         width:widthPercentageToDP(6),

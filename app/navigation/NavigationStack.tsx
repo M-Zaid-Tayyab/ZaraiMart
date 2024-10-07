@@ -198,11 +198,6 @@ function MainNavigator() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Checkout"
-        component={Checkout}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
         name="Pay Now"
         component={PayNow}
         options={{headerShown: false}}

@@ -1,4 +1,4 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import React from 'react';
 import {
@@ -14,30 +14,59 @@ export const useStyle = () => {
     StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: theme.colors.background,
+        backgroundColor:theme.colors.greyBackground,
       },
       subContainer: {
         paddingHorizontal: widthPercentageToDP(3),
       },
       orderCardStyle: {
-        marginTop: heightPercentageToDP(2),
-        backgroundColor: theme.colors.textViewBackground,
+        // marginTop: heightPercentageToDP(2),
+      },
+      modalView: {
+        backgroundColor: theme.colors.greyBackground,
+        paddingHorizontal: widthPercentageToDP(3),
+        width: widthPercentageToDP(100),
+        borderTopStartRadius: widthPercentageToDP(10),
+        borderTopEndRadius: widthPercentageToDP(10),
+        paddingBottom: heightPercentageToDP(3),
+        paddingTop: heightPercentageToDP(1),
+        position: 'absolute',
+        bottom: 0,
+      },
+      reviewHeading: {
+        color: theme.colors.primaryText,
+        fontFamily: theme.fonts.boldFont,
+        fontSize: widthPercentageToDP(4.8),
+        alignSelf: 'center',
       },
       lineSeperator: {
         borderWidth: widthPercentageToDP(0.15),
         borderColor: theme.colors.borderColor,
-        marginTop: heightPercentageToDP(2),
+        marginVertical: heightPercentageToDP(2),
+      },
+      topIndicator: {
+        borderWidth: widthPercentageToDP(0.4),
+        borderColor: theme.colors.greyDot,
+        alignSelf: 'center',
+        paddingHorizontal: widthPercentageToDP(5),
+        marginBottom: heightPercentageToDP(2),
       },
       rowContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
       },
-      button: {
-        bottom: heightPercentageToDP(1),
-        position: 'absolute',
-        alignSelf: 'center',
-        zIndex:121
+      cancelButton: {
+        backgroundColor: theme.colors.transparentGreenBackground,
+        width: widthPercentageToDP(33),
+      },
+      submitButton: {
+        width: widthPercentageToDP(40),
+      },
+      priceHeading: {
+        color: theme.colors.lightGrey,
+        fontFamily: theme.fonts.semiBoldFont,
+        fontSize: widthPercentageToDP(3.2),
       },
       priceText: {
         marginTop: heightPercentageToDP(0.6),
@@ -45,38 +74,22 @@ export const useStyle = () => {
         fontFamily: theme.fonts.boldFont,
         fontSize: widthPercentageToDP(5.2),
       },
-      addressText: {
-        marginTop: heightPercentageToDP(1),
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.boldFont,
-        fontSize: widthPercentageToDP(4.5),
-      },
       priceContainer: {
-        backgroundColor: theme.colors.textViewBackground,
+        position:'absolute',
+        bottom:0,
+        width:'100%',
+        backgroundColor:'white'
+      },
+      priceSubContainer:{
         paddingHorizontal: widthPercentageToDP(3),
-        paddingVertical: heightPercentageToDP(2),
-        marginTop: heightPercentageToDP(2),
-        borderRadius: widthPercentageToDP(3),
+        marginTop: heightPercentageToDP(1.5),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       },
-      amountText: {
-        color: theme.colors.grey700,
-        fontFamily: theme.fonts.mediumFont,
-        fontSize: widthPercentageToDP(3.5),
+      button: {
+        width: widthPercentageToDP(55),
       },
-      totalText: {
-        color: theme.colors.primaryText,
-        fontFamily: theme.fonts.semiBoldFont,
-        fontSize: widthPercentageToDP(3.8),
-      },
-      buttonTop: {
-        paddingVertical: heightPercentageToDP(0.6),
-        paddingHorizontal:widthPercentageToDP(50),
-        bottom: heightPercentageToDP(9.4),
-        borderTopStartRadius:widthPercentageToDP(4),
-        borderTopEndRadius:widthPercentageToDP(4),
-        position: 'absolute',
-      },
-      scrollView: {paddingBottom:heightPercentageToDP(30)},
     });
   return React.useMemo(() => styles(), []);
 };

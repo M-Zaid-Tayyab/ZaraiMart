@@ -10,5 +10,6 @@ export interface Props {
   checkout?:boolean;
   sellerImg?:any;
   onPress?:()=> void;
+  onItemPress?:()=> void;
   sellerName?:string;
 }

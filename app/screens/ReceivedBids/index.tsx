@@ -84,7 +84,6 @@ const ReceivedBids: React.FC = () => {
   const deleteBid = async () => {
     try {
       setModalVisible(false);
-      setModalVisible(true);
       await firestore()
         .collection('crops')
         .doc(selectedItem?.cropId)
@@ -120,18 +119,14 @@ const ReceivedBids: React.FC = () => {
         buyerId: selectedItem?.bidData?.bidderId,
         location:selectedItem?.bidData?.location,
         sellerId: user?.uid,
-        status: 'Active',
+        status: 'Payment Pending',
         createdAt: firestore.FieldValue.serverTimestamp(),
-        deadline: deadline.toISOString(),
+        deadline: data?.deadline,
       };
       batch.set(orderRef, orderData);
-      const cropRef = firestore().collection('crops').doc(selectedItem?.cropId);
-      batch.update(cropRef, {
-        quantity: firestore.FieldValue.increment(-selectedItem?.bidData?.quantity),
-      });
       await batch.commit();
       deleteBid(selectedItem?.bidId, selectedItem?.cropId);
-      dispatch(enableSnackbar('Order has been created successfully!'));
+      dispatch(enableSnackbar('Bid accepted successfully!'));
     } catch (error) {
       console.log(error);
       dispatch(enableSnackbar(formateErrorMessage(error.message)));

@@ -9,7 +9,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import images from '../../config/images';
-import Cart from '../../screens/Cart';
+import Checkout from '../../screens/Checkout';
 import Home from '../../screens/Home';
 import Profile from '../../screens/Profile';
 import Sell from '../../screens/Sell';
@@ -65,7 +65,7 @@ const BottomTabNavigation = () => {
       />
       <Tab.Screen
         name="Checkout"
-        component={Cart}
+        component={Checkout}
         options={{
           headerShown: false,
           tabBarLabel: ({focused, color}) => (
