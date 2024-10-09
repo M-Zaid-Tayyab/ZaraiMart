@@ -1,3 +1,4 @@
+import firestore from '@react-native-firebase/firestore';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -17,16 +18,14 @@ import {
 } from 'react-native-responsive-screen';
 import StarRating from 'react-native-star-rating-widget';
 import {useDispatch, useSelector} from 'react-redux';
+import EmptyComponent from '../../components/EmptyComponent';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import OrderCard from '../../components/OrderCard';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import {dummyOrderData} from '../../utils/dummyData';
-import {useStyle} from './styles';
-import firestore from '@react-native-firebase/firestore';
 import {enableSnackbar} from '../../redux/slices/snackbarSlice';
 import {formateErrorMessage} from '../../utils/helperFunctions';
-import EmptyComponent from '../../components/EmptyComponent';
+import {useStyle} from './styles';
 const CompletedOrders: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
@@ -38,11 +37,13 @@ const CompletedOrders: React.FC = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(state => state.userReducer.user);
+  const [selectedItem, setSelectedItem] = useState();
   const dispatch = useDispatch();
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const renderOrders = ({item}) => (
+  const renderOrders = ({item}) => {
+    return(
     <OrderCard
       style={styles.orderCardStyle}
       imageUrl={{uri: item?.cropData?.images?.[0]}}
@@ -50,7 +51,11 @@ const CompletedOrders: React.FC = () => {
       price={item?.price}
       status={'completed'}
       quantity={item?.quantity}
-      onPress={() => {}}
+      rating={item?.review?.rating}
+      onPress={() => {
+        setSelectedItem(item);
+        setModalVisible(true);
+      }}
       sellerName={item?.seller?.name}
       sellerImg={
         item?.seller?.profileUrl
@@ -58,7 +63,7 @@ const CompletedOrders: React.FC = () => {
           : images.Home.userPlaceholder
       }
     />
-  );
+  )};
   const getCompletedOrders = async () => {
     try {
       setIsLoading(true);
@@ -102,6 +107,32 @@ const CompletedOrders: React.FC = () => {
   useEffect(() => {
     if (isFocused) getCompletedOrders();
   }, [isFocused]);
+  const handleSaveReview = async () => {
+    try {
+      const reviewData = {
+        rating: rating,
+        reviewText: review,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      };
+      const reviewsRef = firestore()
+        .collection('crops')
+        .doc(selectedItem?.cropId)
+        .collection('reviews');
+      const orderRef = firestore()
+        .collection('orders')
+        .doc(selectedItem?.orderId);
+      await reviewsRef.add(reviewData);
+      await orderRef.update({
+        review: reviewData,
+      });
+      console.log('Review saved successfully');
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error saving review: ', error);
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
@@ -134,13 +165,17 @@ const CompletedOrders: React.FC = () => {
             <View style={styles.lineSeperator}></View>
             <OrderCard
               style={styles.orderCardStyle}
-              imageUrl={{uri: 'https://source.unsplash.com/400x300/?tomatoes'}}
-              cropName="Tomatoes"
-              price={parseInt((Math.random() * 10000).toFixed(2))}
-              status="completed"
-              quantity={Math.floor(Math.random() * 100) + 1}
-              sellerName="Zaid"
-              sellerImg={images.Home.userPlaceholder}
+              imageUrl={{uri: selectedItem?.cropData?.images?.[0]}}
+              cropName={selectedItem?.cropData?.title}
+              price={selectedItem?.price}
+              status={'completed'}
+              quantity={selectedItem?.quantity}
+              sellerName={selectedItem?.seller?.name}
+              sellerImg={
+                selectedItem?.seller?.profileUrl
+                  ? {uri: selectedItem?.seller?.profileUrl}
+                  : images.Home.userPlaceholder
+              }
               fromModal
             />
             <View style={styles.lineSeperator}></View>
@@ -190,7 +225,7 @@ const CompletedOrders: React.FC = () => {
               />
               <PrimaryButton
                 title="Submit"
-                onPress={toggleModal}
+                onPress={handleSaveReview}
                 style={styles.submitButton}
               />
             </View>

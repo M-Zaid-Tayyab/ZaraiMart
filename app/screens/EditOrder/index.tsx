@@ -123,6 +123,10 @@ const EditOrder: React.FC = ({route}) => {
     try {
       setIsLoadingModalVisible(true);
       const orderRef = firestore().collection('orders').doc(item?.orderId);
+      const cropRef = firestore().collection('crops').doc(item?.cropId);
+      await cropRef.update({
+        noOfSold: firestore.FieldValue.increment(1)
+      })
       await orderRef.update({
         status: 'Completed',
         completedAt: firestore.FieldValue.serverTimestamp(),

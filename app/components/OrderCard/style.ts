@@ -122,7 +122,22 @@ export const useStyle = () => {
       pen:{
         width: widthPercentageToDP(3),
         height: heightPercentageToDP(1.5),
-      }
+      },
+      icon: {
+        height: heightPercentageToDP(2),
+        width: widthPercentageToDP(5),
+      },
+      seperatorIcon: {
+        height: heightPercentageToDP(1.7),
+        width: widthPercentageToDP(0.4),
+        marginLeft:widthPercentageToDP(2)
+      },
+      ratingText: {
+        fontFamily: theme.fonts.mediumFont,
+        color: theme.colors.grey700,
+        fontSize: widthPercentageToDP(3),
+        marginLeft:widthPercentageToDP(1)
+      },
     });
   return React.useMemo(() => styles(), []);
 };

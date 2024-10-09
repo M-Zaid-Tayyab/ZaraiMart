@@ -25,10 +25,8 @@ const OrderCard: React.FC<Props> = props => {
         />
         <View style={styles.txtContainer}>
           <View style={styles.centerSpace}>
-          <Text style={styles.nameText}>{props?.cropName}</Text>
-          {props?.greenDot&&
-          <View style={styles.greenDot}></View>
-          }
+            <Text style={styles.nameText}>{props?.cropName}</Text>
+            {props?.greenDot && <View style={styles.greenDot}></View>}
           </View>
           <Text style={styles.qtText}>Qty = {props?.quantity}</Text>
           <View style={styles.sellerContainer}>
@@ -59,11 +57,26 @@ const OrderCard: React.FC<Props> = props => {
               </Pressable>
             ) : !props?.fromModal ? (
               props?.status != 'active' ? (
-                <TouchableOpacity
-                  style={styles.buttonContainer}
-                  onPress={props?.onPress}>
-                  <Text style={styles.buttonText}>Leave a review</Text>
-                </TouchableOpacity>
+                props?.status == 'completed' ? (
+                  props?.rating ? (
+                    <View style={styles.flexrow}>
+                      <FastImage
+                        source={images.Home.star}
+                        style={styles.icon}
+                        resizeMode="contain"
+                      />
+                      <Text style={styles.ratingText}>{props?.rating}</Text>
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.buttonContainer}
+                      onPress={props?.onPress}>
+                      <Text style={styles.buttonText}>Leave a review</Text>
+                    </TouchableOpacity>
+                  )
+                ) : (
+                  <Text style={styles.greenText}>{props?.date}</Text>
+                )
               ) : (
                 <Text style={styles.greenText}>{props?.deadline}</Text>
               )

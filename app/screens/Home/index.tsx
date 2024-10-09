@@ -42,29 +42,42 @@ const Home: React.FC = () => {
   const [isPopularCropsLoading, setIsPopularCropsLoading] = useState(true);
   const [recentCropsData, setRecentCropsData] = useState();
   const [mostPopularCropsData, setMostPopularCropsData] = useState();
-  const renderSpecialCrops = ({item}) => (
-    <CropCard
-      style={{marginRight: widthPercentageToDP(5)}}
-      image={{uri: item?.images?.[0]}}
-      name={item?.title}
-      rating={item?.rating}
-      noOfSold={item?.noOfSold}
-      price={item?.price}
-      isSpecialOffer={true}
-      onPress={() => navigation.navigate('Crop',{cropId:item?.id})}
-    />
-  );
-  const renderMostPopularCrops = ({item}) => (
-    <CropCard
-      style={{marginRight: widthPercentageToDP(5)}}
-      image={{uri: item?.images?.[0]}}
-      name={item?.title}
-      rating={item?.rating}
-      noOfSold={item?.noOfSold}
-      price={item?.price}
-      onPress={() => navigation.navigate('Crop',{cropId:item?.id})}
-    />
-  );
+  const calculateAverageRating = reviews => {
+    if (reviews?.length === 0) return 0;
+
+    const totalRating = reviews?.reduce(
+      (acc, review) => acc + review?.rating,
+      0,
+    );
+    return totalRating / reviews?.length;
+  };
+  const renderSpecialCrops = ({item}) => {
+    return (
+      <CropCard
+        style={{marginRight: widthPercentageToDP(5)}}
+        image={{uri: item?.images?.[0]}}
+        name={item?.title}
+        rating={item?.averageRating}
+        noOfSold={item?.noOfSold}
+        price={item?.price}
+        isSpecialOffer={true}
+        onPress={() => navigation.navigate('Crop', {cropId: item?.id})}
+      />
+    );
+  };
+  const renderMostPopularCrops = ({item}) => {
+    return (
+      <CropCard
+        style={{marginRight: widthPercentageToDP(5)}}
+        image={{uri: item?.images?.[0]}}
+        name={item?.title}
+        rating={item?.averageRating}
+        noOfSold={item?.noOfSold}
+        price={item?.price}
+        onPress={() => navigation.navigate('Crop', {cropId: item?.id})}
+      />
+    );
+  };
   const getSortedCrops = async () => {
     try {
       setIsRecentlyCropsLoading(true);
@@ -73,11 +86,34 @@ const Home: React.FC = () => {
         .orderBy('createdAt', 'desc')
         .limit(10)
         .get();
-      const cropsData = cropsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setRecentCropsData(cropsData);
+
+      const cropsWithReviews = [];
+
+      for (const cropDoc of cropsSnapshot.docs) {
+        const cropData = {
+          id: cropDoc.id,
+          ...cropDoc.data(),
+        };
+
+        const reviewsSnapshot = await firestore()
+          .collection('crops')
+          .doc(cropDoc.id)
+          .collection('reviews')
+          .get();
+
+        const reviews = reviewsSnapshot.docs.map(reviewDoc => ({
+          id: reviewDoc.id,
+          ...reviewDoc.data(),
+        }));
+        const averageRating = calculateAverageRating(reviews);
+        cropsWithReviews.push({
+          ...cropData,
+          reviews,
+          averageRating,
+        });
+      }
+
+      setRecentCropsData(cropsWithReviews);
     } catch (error) {
       dispatch(enableSnackbar(formateErrorMessage(error.message)));
     } finally {
@@ -91,7 +127,8 @@ const Home: React.FC = () => {
         .collection('crops')
         .limit(10)
         .get();
-      const cropsWithReviewCounts = await Promise.all(
+
+      const cropsWithReviewData = await Promise.all(
         cropsSnapshot.docs.map(async cropDoc => {
           const cropData = cropDoc.data();
           const cropId = cropDoc.id;
@@ -103,23 +140,32 @@ const Home: React.FC = () => {
               .collection('reviews')
               .get();
 
-            const reviewCount = reviewsSnapshot.size;
+            const reviews = reviewsSnapshot.docs.map(reviewDoc => ({
+              id: reviewDoc.id,
+              ...reviewDoc.data(),
+            }));
+
+            const reviewCount = reviews.length; 
+            const averageRating = calculateAverageRating(reviews); 
 
             return {
               id: cropId,
               ...cropData,
               reviewCount,
+              averageRating, 
             };
           } catch (error) {
             return {
               id: cropId,
               ...cropData,
               reviewCount: 0,
+              averageRating: 0, 
             };
           }
         }),
       );
-      const sortedCrops = cropsWithReviewCounts.sort(
+
+      const sortedCrops = cropsWithReviewData.sort(
         (a, b) => b.reviewCount - a.reviewCount,
       );
 

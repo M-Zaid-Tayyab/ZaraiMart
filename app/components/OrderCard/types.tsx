@@ -18,4 +18,6 @@ export interface Props {
   onRightIcnPress?:()=> void;
   onItemPress?:()=> void;
   greenDot?:boolean;
+  date?:any;
+  rating?:any;
 }

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTheme } from 'react-native-paper';
 import ActiveOrders from '../../screens/ActiveOrders';
 import CompletedOrders from '../../screens/CompletedOrders';
-import PendingOrders from '../../screens/PendingOrders';
+import CancelledOrders from '../../screens/CancelledOrders';
 import { useStyle } from './styles';
 const Tab = createMaterialTopTabNavigator();
 
@@ -26,7 +26,7 @@ const TopTabNavigation = () => {
     <Tab.Navigator screenOptions={topTabOptions}>
       <Tab.Screen name="Active" component={ActiveOrders} />
       <Tab.Screen name="Completed" component={CompletedOrders} />
-      <Tab.Screen name="Cancelled" component={CompletedOrders} />
+      <Tab.Screen name="Cancelled" component={CancelledOrders} />
     </Tab.Navigator>
   );
 };
