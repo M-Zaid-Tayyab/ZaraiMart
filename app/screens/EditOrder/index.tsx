@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {
   FlatList,
   Pressable,
@@ -10,32 +10,54 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import {Dropdown} from 'react-native-element-dropdown';
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
-import { useTheme } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import {useTheme} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import LoadingModal from '../../components/LoadingModal';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import { enableSnackbar } from '../../redux/slices/snackbarSlice';
-import { cropCategories, unitsData } from '../../utils/dummyData';
-import { formateErrorMessage } from '../../utils/helperFunctions';
-import { useStyle } from './styles';
+import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import {cropCategories, unitsData} from '../../utils/dummyData';
+import {formateErrorMessage} from '../../utils/helperFunctions';
+import {useStyle} from './styles';
 const EditOrder: React.FC = ({route}) => {
   const styles = useStyle();
   const theme = useTheme();
   const params = route?.params;
   const item = params?.item;
+  const notifications = params?.notifications;
+  const user = useSelector(state => state?.userReducer?.user);
   const navigation = useNavigation<any>();
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState();
   const {control, handleSubmit, formState, watch, setValue} = useForm();
   const [unitValue, setUitValue] = useState(item?.cropData?.unit);
   const [categoryValue, setCategoryValue] = useState(item?.cropData?.category);
   const [isFocus, setIsFocus] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isLoadingModalVisible, setIsLoadingModalVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visible, setVisible] = useState(
+    notifications && notifications?.length > 0 ? true : false,
+  );
+  const [currentNotificationIndex, setCurrentNotificationIndex] = useState(0);
+  const closeModal = async () => {
+    if (currentNotificationIndex <= notifications?.length - 1) {
+      const orderRef = firestore().collection('orders').doc(item?.orderId);
+      await orderRef.update({
+        notifications: firestore.FieldValue.arrayRemove(
+          notifications?.[currentNotificationIndex],
+        ),
+      });
+      setVisible(true);
+      setCurrentNotificationIndex(currentNotificationIndex + 1);
+    } else {
+      setVisible(false);
+      setCurrentNotificationIndex(0);
+    }
+  };
   const getDaysLeft = deadline => {
     const deadlineDate = new Date(deadline);
     const currentDate = new Date();
@@ -55,16 +77,64 @@ const EditOrder: React.FC = ({route}) => {
     setModalVisible(!isModalVisible);
   };
   const deleteOrder = async () => {
-    
-    setModalVisible(false);
-    return
     try {
+      setVisible(false);
+      setIsLoadingModalVisible(true);
       const orderRef = firestore().collection('orders').doc(item?.orderId);
-      await orderRef.delete();
+      await orderRef.update({
+        status: 'Cancelled',
+        cancelledAt: firestore.FieldValue.serverTimestamp(),
+        notifications: firestore.FieldValue.arrayRemove(
+          notifications?.[currentNotificationIndex],
+        ),
+      });
+      navigation.goBack();
     } catch (error) {
       dispatch(enableSnackbar(formateErrorMessage(error.message)));
     } finally {
+      setIsLoadingModalVisible(false);
+    }
+  };
+  const handleRequest = async request => {
+    setModalVisible(false)
+    setIsLoading(true);
+    const orderRef = firestore().collection('orders').doc(item?.orderId);
+    try {
+      const notificationData = {
+        request: request == 'complete' ? 'Completed' : 'Deleted',
+        requestedBy: user?.uid,
+        status: 'Pending',
+      };
+
+      await orderRef.update({
+        notifications: firestore.FieldValue.arrayUnion(notificationData),
+      });
+
       navigation.goBack();
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCompleteOrder = async () => {
+    setVisible(false);
+    try {
+      setIsLoadingModalVisible(true);
+      const orderRef = firestore().collection('orders').doc(item?.orderId);
+      await orderRef.update({
+        status: 'Completed',
+        completedAt: firestore.FieldValue.serverTimestamp(),
+        notifications: firestore.FieldValue.arrayRemove(
+          notifications?.[currentNotificationIndex],
+        ),
+      });
+      navigation.goBack();
+    } catch (error) {
+      dispatch(enableSnackbar(formateErrorMessage(error.message)));
+    } finally {
+      setIsLoadingModalVisible(false);
     }
   };
   const viewableItemsChanged = useCallback(({viewableItems}) => {
@@ -229,13 +299,14 @@ const EditOrder: React.FC = ({route}) => {
         </View>
       </View>
 
-      {/* <PrimaryButton
-        title="Update"
+      <PrimaryButton
+        title="Mark as Complete"
         style={styles.button}
         disabledWhileAnimating
-        onPress={handleSubmit(editCrop)}
+        onPress={() => handleRequest('complete')}
         animating={isLoading}
-      /> */}
+      />
+
       <Modal
         isVisible={isModalVisible}
         onBackButtonPress={toggleModal}
@@ -258,12 +329,55 @@ const EditOrder: React.FC = ({route}) => {
             />
             <PrimaryButton
               title="Yes, Delete"
-              onPress={deleteOrder}
+              onPress={() => handleRequest('delete')}
               style={styles.submitButton}
             />
           </View>
         </View>
       </Modal>
+      <Modal isVisible={visible}>
+        <View style={styles.requestModal}>
+          <View style={styles.topIndicator}></View>
+          <Text style={styles.reviewHeading}>Order Request</Text>
+          <View style={styles.lineSeperator}></View>
+          <Text style={styles.subHeading}>
+            {item?.buyerId ==
+            notifications?.[currentNotificationIndex]?.requestedBy
+              ? 'Buyer'
+              : 'Seller'}{' '}
+            wants to{' '}
+            {notifications?.[currentNotificationIndex]?.request == 'Completed'
+              ? 'complete'
+              : 'delete'}{' '}
+            this order
+          </Text>
+          <View style={styles.lineSeperator}></View>
+          <View style={styles.requestModalContainer}>
+            <PrimaryButton
+              title="Discard"
+              textStyle={{color: theme.colors.primaryButton}}
+              onPress={closeModal}
+              style={styles.cancelButton}
+            />
+            <PrimaryButton
+              title={
+                notifications?.[currentNotificationIndex]?.request ==
+                'Completed'
+                  ? 'Yes, Complete'
+                  : 'Yes, Delete'
+              }
+              onPress={
+                notifications?.[currentNotificationIndex]?.request ==
+                'Completed'
+                  ? handleCompleteOrder
+                  : deleteOrder
+              }
+              style={styles.submitButton}
+            />
+          </View>
+        </View>
+      </Modal>
+      <LoadingModal visible={isLoadingModalVisible} />
     </ScrollView>
   );
 };

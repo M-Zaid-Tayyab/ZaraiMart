@@ -36,6 +36,7 @@ import EditProduct from '../screens/EditProduct';
 import ReceivedBids from '../screens/ReceivedBids';
 import {disableSnackbar} from '../redux/slices/snackbarSlice';
 import EditOrder from '../screens/EditOrder';
+import SentBids from '../screens/SentBids';
 const Stack = createStackNavigator();
 function AuthNavigator() {
   const theme = useTheme();
@@ -230,6 +231,11 @@ function MainNavigator() {
       <Stack.Screen
         name="EditOrder"
         component={EditOrder}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SentBids"
+        component={SentBids}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

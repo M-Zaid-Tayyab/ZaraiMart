@@ -152,6 +152,14 @@ export const useStyle = () => {
         position: 'absolute',
         bottom: 0,
       },
+      requestModal: {
+        backgroundColor: theme.colors.greyBackground,
+        paddingHorizontal: widthPercentageToDP(3),
+        borderRadius: widthPercentageToDP(5),
+        paddingBottom: heightPercentageToDP(3),
+        paddingTop: heightPercentageToDP(1),
+        alignSelf:'center'
+      },
       reviewHeading: {
         color: theme.colors.primaryText,
         fontFamily: theme.fonts.boldFont,
@@ -187,6 +195,12 @@ export const useStyle = () => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+      },
+      requestModalContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width:widthPercentageToDP(80)
       },
       statusContainer: {
         flexDirection: 'row',

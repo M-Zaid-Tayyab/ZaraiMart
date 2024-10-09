@@ -29,40 +29,50 @@ const ActiveOrders: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
-  const getDaysLeft = (deadline) => {
+  const getDaysLeft = deadline => {
     const deadlineDate = new Date(deadline);
     const currentDate = new Date();
-    const timeDiff = deadlineDate - currentDate; 
+    const timeDiff = deadlineDate - currentDate;
     if (timeDiff <= 0) {
       return 'Over due';
     }
-  
+
     const daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-  
+
     if (daysLeft > 0) {
       return `${daysLeft} day(s) left`;
     }
   };
-  const renderOrders = ({item}) => (
-    <OrderCard
-      style={styles.orderCardStyle}
-      imageUrl={{uri: item?.cropData?.images?.[0]}}
-      cropName={item?.cropData?.title}
-      price={item?.price}
-      status={'active'}
-      quantity={item?.quantity}
-      deadline={getDaysLeft(item?.deadline)}
-      onItemPress={() => {
-        navigation.navigate('EditOrder', {item: item});
-      }}
-      sellerName={item?.seller?.name}
-      sellerImg={
-        item?.seller?.profileUrl
-          ? {uri: item?.seller?.profileUrl}
-          : images.Home.userPlaceholder
-      }
-    />
-  );
+  const renderOrders = ({item}) => {
+    let notifications = item?.notifications?.filter(
+      item => item?.requestedBy != user?.uid,
+    );
+    notifications=notifications?.reverse();
+    return (
+      <OrderCard
+        style={styles.orderCardStyle}
+        imageUrl={{uri: item?.cropData?.images?.[0]}}
+        cropName={item?.cropData?.title}
+        price={item?.price}
+        status={'active'}
+        quantity={item?.quantity}
+        greenDot={notifications&&notifications?.length>0?true:false}
+        deadline={getDaysLeft(item?.deadline)}
+        onItemPress={() => {
+          navigation.navigate('EditOrder', {
+            item: item,
+            notifications: notifications,
+          });
+        }}
+        sellerName={item?.seller?.name}
+        sellerImg={
+          item?.seller?.profileUrl
+            ? {uri: item?.seller?.profileUrl}
+            : images.Home.userPlaceholder
+        }
+      />
+    );
+  };
   const getActiveOrders = async () => {
     try {
       setIsLoading(true);

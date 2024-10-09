@@ -78,6 +78,7 @@ const images = {
     logout: require('../assets/Profile/Logout.png'),
     delete: require('../assets/Profile/delete.png'),
     bidding: require('../assets/Profile/bidding.png'),
+    sentBids: require('../assets/Profile/sentBids.png'),
   },
   EditProfile: {
     message: require('../assets/EditProfile/Message.png'),

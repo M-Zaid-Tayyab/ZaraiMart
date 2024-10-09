@@ -17,4 +17,5 @@ export interface Props {
   rightIcn?:any;
   onRightIcnPress?:()=> void;
   onItemPress?:()=> void;
+  greenDot?:boolean;
 }

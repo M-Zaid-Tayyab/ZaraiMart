@@ -185,6 +185,12 @@ const Profile: React.FC = () => {
           rightIcon={images.Profile.next}
           onPress={() => navigation.navigate('Received Bids')}
         />
+        <Option
+          leftIcon={images.Profile.sentBids}
+          title="Sent Bids"
+          rightIcon={images.Profile.next}
+          onPress={() => navigation.navigate('SentBids')}
+        />
         {/* <Option
           leftIcon={images.Profile.wallet}
           title="Payment"

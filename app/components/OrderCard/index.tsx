@@ -24,7 +24,12 @@ const OrderCard: React.FC<Props> = props => {
           resizeMode="stretch"
         />
         <View style={styles.txtContainer}>
+          <View style={styles.centerSpace}>
           <Text style={styles.nameText}>{props?.cropName}</Text>
+          {props?.greenDot&&
+          <View style={styles.greenDot}></View>
+          }
+          </View>
           <Text style={styles.qtText}>Qty = {props?.quantity}</Text>
           <View style={styles.sellerContainer}>
             <View style={styles.row}>

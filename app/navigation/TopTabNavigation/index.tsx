@@ -25,8 +25,8 @@ const TopTabNavigation = () => {
   return (
     <Tab.Navigator screenOptions={topTabOptions}>
       <Tab.Screen name="Active" component={ActiveOrders} />
-      <Tab.Screen name="Pending" component={PendingOrders} />
       <Tab.Screen name="Completed" component={CompletedOrders} />
+      <Tab.Screen name="Cancelled" component={CompletedOrders} />
     </Tab.Navigator>
   );
 };

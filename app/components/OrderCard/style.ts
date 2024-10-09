@@ -70,6 +70,11 @@ export const useStyle = () => {
         borderRadius: widthPercentageToDP(50),
         marginRight: widthPercentageToDP(1.5),
       },
+      greenDot:{
+        padding:widthPercentageToDP(2),
+        borderRadius:widthPercentageToDP(100),
+        backgroundColor:theme.colors.primaryButton
+      },
       cancelImg: {
         height: heightPercentageToDP(3),
         width: widthPercentageToDP(6),
