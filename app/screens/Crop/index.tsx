@@ -52,22 +52,55 @@ const Crop: React.FC = ({route}) => {
   const renderImages = ({item}) => (
     <FastImage resizeMode="stretch" source={{uri: item}} style={styles.img} />
   );
+  const calculateAverageRating = reviews => {
+    if (reviews?.length === 0) return 0;
+
+    const totalRating = reviews?.reduce(
+      (acc, review) => acc + review?.rating,
+      0,
+    );
+    return totalRating / reviews?.length;
+  };
   const getCropData = async () => {
     try {
       setIsLoading(true);
       const cropRef = await firestore().collection('crops').doc(cropId).get();
+      const reviewSnapshot = await firestore()
+        .collection('crops')
+        .doc(cropId)
+        .collection('reviews')
+        .get();
       if (cropRef.exists) {
         const cropData = cropRef.data();
+        const reviews = await Promise.all(
+          reviewSnapshot.docs.map(async reviewDoc => {
+            const reviewData = reviewDoc.data();
+            const reviewedByRef = await firestore()
+              .collection('users')
+              .doc(reviewData?.userId)
+              .get();
+            const reviewedByData = reviewedByRef.data();
+            return {
+              id: reviewDoc.id,
+              ...reviewData,
+              reviewedBy: reviewedByData, 
+            };
+          })
+        );
         const userRef = await cropData?.userId.get();
         if (userRef) {
           const userData = userRef.data();
+          const averageRating = calculateAverageRating(reviews);
           setCropDetails({
             ...cropData,
             userId: userData,
+            reviews: reviews,
+            averageRating: averageRating,
           });
         }
       }
     } catch (error) {
+      console.log(error);
       dispatch(enableSnackbar(formateErrorMessage(error.message)));
     } finally {
       setIsLoading(false);
@@ -179,10 +212,12 @@ const Crop: React.FC = ({route}) => {
               />
               <TouchableOpacity
                 style={styles.ratingContainer}
-                onPress={() => navigation.navigate('Review')}>
+                onPress={() =>
+                  navigation.navigate('Review', {reviews: cropDetails?.reviews})
+                }>
                 <Text style={styles.reviewText}>
-                  {cropDetails?.rating} ({cropDetails?.reviews?.length || '0'}{' '}
-                  reviews)
+                  {cropDetails?.averageRating} (
+                  {cropDetails?.reviews?.length || '0'} reviews)
                 </Text>
               </TouchableOpacity>
             </View>

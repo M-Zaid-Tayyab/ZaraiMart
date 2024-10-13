@@ -113,6 +113,7 @@ const CompletedOrders: React.FC = () => {
         rating: rating,
         reviewText: review,
         createdAt: firestore.FieldValue.serverTimestamp(),
+        userId:user?.uid,
       };
       const reviewsRef = firestore()
         .collection('crops')

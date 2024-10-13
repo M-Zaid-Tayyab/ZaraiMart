@@ -123,8 +123,8 @@ const SentBids: React.FC = () => {
   }, [isFocused]);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.subContainer}>
       <Header title="Sent Bids" style={styles.header} />
+      <View style={styles.subContainer}>
         {isLoading ? (
           <ActivityIndicator
             color={theme.colors.primaryButton}

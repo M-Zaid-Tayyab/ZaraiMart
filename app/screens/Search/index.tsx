@@ -1,9 +1,14 @@
-import {Slider} from '@miblanchard/react-native-slider';
-import {useNavigation} from '@react-navigation/native';
+import { Slider } from '@miblanchard/react-native-slider';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import _ from 'lodash';
-import React, {useState, useMemo} from 'react';
+import { FlatList as GestureHandlerFlatList } from 'react-native-gesture-handler';
+
+import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
+  Platform,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -11,37 +16,39 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import CropCard from '../../components/CropCard';
+import EmptyComponent from '../../components/EmptyComponent';
 import Filter from '../../components/Filter';
+import Header from '../../components/Header';
 import PrimaryButton from '../../components/PrimaryButton';
 import Searchbar from '../../components/Searchbar';
 import images from '../../config/images';
 import {
-  dummyCropData,
   reviewFilter,
   sortData,
-  vegetableData,
+  vegetableData
 } from '../../utils/dummyData';
-import {useStyle} from './styles';
-import Header from '../../components/Header';
+import { useStyle } from './styles';
 
 const Search: React.FC = () => {
   const styles = useStyle();
   const theme = useTheme();
   const navigation = useNavigation<any>();
   const [searchedQuery, setSearchedQuery] = useState('');
-  const [showResults, setShowResults] = useState(false);
+  const [showResults, setShowResults] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(10000);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(10000);
   const [isFocused, setIsFocused] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [cropsData, setCropsData] = useState();
   const [selectedPopularFilterIndex, setSelectedPopularFilterIndex] =
     useState(-1);
   const handleSelectPopularFilter = (index: number) => {
@@ -77,18 +84,67 @@ const Search: React.FC = () => {
     setShowResults(false);
     setSearchedQuery(txt);
   };
-  const handleOnSubmitEditing = () => {
-    if (searchedQuery.length > 0) setShowResults(true);
+  const calculateAverageRating = reviews => {
+    if (reviews?.length === 0) return 0;
+
+    const totalRating = reviews?.reduce(
+      (acc, review) => acc + review?.rating,
+      0,
+    );
+    return totalRating / reviews?.length;
+  };
+  const handleOnSubmitEditing = async () => {
+    try {
+      setIsLoading(true);
+      setShowResults(true);
+      const cropsSnapshot = await firestore()
+        .collection('crops')
+        .where('title', '>=', searchedQuery)
+        .where('title', '<=', searchedQuery + '\uf8ff')
+        .get();
+
+      const cropsWithReviews = [];
+
+      for (const cropDoc of cropsSnapshot.docs) {
+        const cropData = {
+          id: cropDoc.id,
+          ...cropDoc.data(),
+        };
+
+        const reviewsSnapshot = await firestore()
+          .collection('crops')
+          .doc(cropDoc.id)
+          .collection('reviews')
+          .get();
+
+        const reviews = reviewsSnapshot.docs.map(reviewDoc => ({
+          id: reviewDoc.id,
+          ...reviewDoc.data(),
+        }));
+        const averageRating = calculateAverageRating(reviews);
+        cropsWithReviews.push({
+          ...cropData,
+          reviews,
+          averageRating,
+        });
+      }
+
+      setCropsData(cropsWithReviews);
+    } catch (error) {
+      console.error('Error searching crops:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   const renderFoundCrops = ({item}) => (
     <CropCard
       style={{marginRight: widthPercentageToDP(5)}}
-      image={{uri: item?.imageUrl}}
-      name={item?.name}
-      rating={item?.rating}
+      image={{uri: item?.images?.[0]}}
+      name={item?.title}
+      rating={item?.averageRating}
       noOfSold={item?.noOfSold}
       price={item?.price}
-      onPress={() => navigation.navigate('Crop')}
+      onPress={() => navigation.navigate('Crop', {cropId: item?.id})}
     />
   );
   const renderRecent = ({item}) => (
@@ -141,7 +197,7 @@ const Search: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
-      <Header  title='Search' />
+        <Header title="Search" />
         <Searchbar
           isFocused={handleIsFocused}
           onChangeText={handleChangeText}
@@ -163,29 +219,38 @@ const Search: React.FC = () => {
           )}
         />
         {showResults && !isFocused ? (
-          <View>
-            <View style={styles.rowContainer}>
-              <View style={styles.resultTextContainer}>
-                <Text style={styles.resultText}>Results for{' "'}</Text>
-                <Text style={styles.queryText}>{searchedQuery}</Text>
-                <Text style={styles.resultText}>{'"'}</Text>
-              </View>
-              <Text style={styles.itemText}>0 found</Text>
-            </View>
-            <View style={{paddingBottom: heightPercentageToDP(33)}}>
-              <FlatList
-                data={dummyCropData}
-                keyExtractor={item => item.id}
-                renderItem={renderFoundCrops}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                style={{marginTop: heightPercentageToDP(3)}}
-              />
-            </View>
-          </View>
-        ) : null}
-        {isFocused ? (
+  isLoading ? (
+    <ActivityIndicator
+      color={theme.colors.primaryButton}
+      style={{marginTop: heightPercentageToDP(1)}}
+      size={Platform.OS == 'ios' ? 'large' : widthPercentageToDP(11)}
+    />
+  ) : (
+    <View>
+      <View style={styles.rowContainer}>
+        <View style={styles.resultTextContainer}>
+          <Text style={styles.resultText}>Results for{' "'}</Text>
+          <Text style={styles.queryText}>{searchedQuery}</Text>
+          <Text style={styles.resultText}>{'"'}</Text>
+        </View>
+        <Text style={styles.itemText}>{cropsData?.length} found</Text>
+      </View>
+          <FlatList
+            data={cropsData}
+            keyExtractor={item => item.id}
+            renderItem={renderFoundCrops}
+            numColumns={2}
+            ListEmptyComponent={EmptyComponent}
+            contentContainerStyle={{paddingBottom:heightPercentageToDP(35)}}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            style={{marginTop: heightPercentageToDP(3)}}
+          />
+    </View>
+  )
+) : undefined}
+
+        {/* {isFocused ? (
           <View>
             <View style={styles.rowContainer}>
               <View style={styles.resultTextContainer}>
@@ -206,20 +271,7 @@ const Search: React.FC = () => {
               />
             </View>
           </View>
-        ) : null}
-        {/* Logic to be implemented to show if the results are not being found */}
-        {/* <View style={styles.notFoundContainer}>
-          <FastImage
-            source={images.Search.notFound}
-            style={styles.noFoundImg}
-            resizeMode="stretch"
-          />
-          <Text style={styles.notFoundText}>Not found</Text>
-          <Text style={styles.notFoundDescription}>
-            Sorry, the keyword you entered cannot be found, please check again
-            or search with another keyword.
-          </Text>
-        </View> */}
+        ) : null} */}
       </View>
       <Modal
         isVisible={isModalVisible}
@@ -234,7 +286,7 @@ const Search: React.FC = () => {
           <Text style={styles.sortText}>Sort & Filter</Text>
           <View style={styles.lineSeperator}></View>
           <Text style={styles.headingText}>Categories</Text>
-          <FlatList
+          <GestureHandlerFlatList
             data={vegetableData}
             horizontal
             showsVerticalScrollIndicator={false}
@@ -258,7 +310,7 @@ const Search: React.FC = () => {
             minimumTrackStyle={{backgroundColor: theme.colors.primaryButton}}
           />
           <Text style={styles.headingText}>Sort by</Text>
-          <FlatList
+          <GestureHandlerFlatList
             data={sortData}
             horizontal
             showsVerticalScrollIndicator={false}
@@ -266,7 +318,7 @@ const Search: React.FC = () => {
             renderItem={renderPopularityFilters}
           />
           <Text style={styles.headingText}>Rating</Text>
-          <FlatList
+          <GestureHandlerFlatList
             data={reviewFilter}
             horizontal
             showsVerticalScrollIndicator={false}

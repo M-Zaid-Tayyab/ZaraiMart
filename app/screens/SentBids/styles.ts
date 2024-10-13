@@ -20,10 +20,12 @@ export const useStyle = () => {
         paddingHorizontal:widthPercentageToDP(3),
       },
       header: {
-        marginBottom: heightPercentageToDP(3),
+        marginBottom: heightPercentageToDP(2),
+        paddingBottom:heightPercentageToDP(0.6),
+        paddingHorizontal:widthPercentageToDP(3),
+        backgroundColor:'white'
       },
       orderCardStyle:{
-        marginTop: heightPercentageToDP(2),
       },
       modalView: {
         backgroundColor: theme.colors.greyBackground,

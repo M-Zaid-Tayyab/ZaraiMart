@@ -25,7 +25,7 @@ const EntryPoint: React.FC = () => {
         <PaperProvider theme={DefaultTheme as any}>
           <SafeAreaView
             style={{
-              paddingTop: Platform.OS === 'ios' ? 0 : heightPercentageToDP(2),
+              paddingTop: Platform.OS === 'ios' ? 0 : heightPercentageToDP(1),
               flex: 1,
               backgroundColor: 'white',
             }}>
