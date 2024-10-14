@@ -202,14 +202,14 @@ const Home: React.FC = () => {
             </View>
           </View>
           <View style={styles.subRowFlex}>
-            <Pressable onPress={() => navigation.navigate('Notification')}>
+            {/* <Pressable onPress={() => navigation.navigate('Notification')}>
               <FastImage
                 source={images.Home.notification}
                 style={styles.icon}
                 resizeMode="contain"
               />
               <View style={styles.greenDotNotification}></View>
-            </Pressable>
+            </Pressable> */}
             <Pressable
               style={styles.row}
               onPress={() => {

@@ -1,10 +1,10 @@
-import { Slider } from '@miblanchard/react-native-slider';
+import {Slider} from '@miblanchard/react-native-slider';
 import firestore from '@react-native-firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash';
-import { FlatList as GestureHandlerFlatList } from 'react-native-gesture-handler';
+import {FlatList as GestureHandlerFlatList} from 'react-native-gesture-handler';
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
-import { useTheme } from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
@@ -29,11 +29,12 @@ import PrimaryButton from '../../components/PrimaryButton';
 import Searchbar from '../../components/Searchbar';
 import images from '../../config/images';
 import {
+  cropCategories,
   reviewFilter,
   sortData,
-  vegetableData
+  vegetableData,
 } from '../../utils/dummyData';
-import { useStyle } from './styles';
+import {useStyle} from './styles';
 
 const Search: React.FC = () => {
   const styles = useStyle();
@@ -43,12 +44,17 @@ const Search: React.FC = () => {
   const [showResults, setShowResults] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
   const [low, setLow] = useState(0);
-  const [high, setHigh] = useState(10000);
+  const [high, setHigh] = useState(100000);
   const [min, setMin] = useState(0);
-  const [max, setMax] = useState(10000);
+  const [max, setMax] = useState(100000);
   const [isFocused, setIsFocused] = useState(true);
+  const [selectedCropCategory, setSelectedCropCategory] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [cropsData, setCropsData] = useState();
+  const [selectedRating, setSelectedRating] = useState();
+  const [selectedSortByFilter, setSelectedSortByFilter] = useState();
+  const [filteredCropsData, setFilteredCropsData] = useState();
+  const [showFilterData, setShowFilterData] = useState(false);
   const [selectedPopularFilterIndex, setSelectedPopularFilterIndex] =
     useState(-1);
   const handleSelectPopularFilter = (index: number) => {
@@ -79,6 +85,12 @@ const Search: React.FC = () => {
   };
   const handleReset = () => {
     setHigh(() => max);
+    setSelectedCropCategory(undefined);
+    setSelectedSortByFilter(undefined);
+    setSelectedRating(undefined);
+    setSelectedCropFilterIndex(-1);
+    setSelectedReviewFilterIndex(-1);
+    setSelectedPopularFilterIndex(-1);
   };
   const handleChangeText = (txt: string) => {
     setShowResults(false);
@@ -128,8 +140,9 @@ const Search: React.FC = () => {
           averageRating,
         });
       }
-
+      setShowFilterData(false);
       setCropsData(cropsWithReviews);
+      setFilteredCropsData(undefined);
     } catch (error) {
       console.error('Error searching crops:', error);
     } finally {
@@ -161,10 +174,13 @@ const Search: React.FC = () => {
   );
   const renderCropFilters = ({item, index}) => (
     <Filter
-      name={item?.name}
+      name={item?.value}
       style={{marginRight: widthPercentageToDP(2)}}
       isSelected={index === selectedCropFilterIndex}
-      onPress={() => handleSelectCropFilter(index)}
+      onPress={() => {
+        handleSelectCropFilter(index);
+        setSelectedCropCategory(item?.value);
+      }}
     />
   );
   const renderPopularityFilters = ({item, index}) => (
@@ -172,7 +188,10 @@ const Search: React.FC = () => {
       name={item?.name}
       style={{marginRight: widthPercentageToDP(2)}}
       isSelected={index === selectedPopularFilterIndex}
-      onPress={() => handleSelectPopularFilter(index)}
+      onPress={() => {
+        handleSelectPopularFilter(index);
+        setSelectedSortByFilter(item?.name);
+      }}
     />
   );
   const renderRatingFilters = ({item, index}) => (
@@ -181,7 +200,10 @@ const Search: React.FC = () => {
       style={{marginRight: widthPercentageToDP(2)}}
       reviewFilter={true}
       isSelected={index === selectedReviewFilterIndex}
-      onPress={() => handleSelectReviewFilter(index)}
+      onPress={() => {
+        handleSelectReviewFilter(index);
+        setSelectedRating(item?.rating);
+      }}
     />
   );
   const renderThumbComponent = () => (
@@ -194,6 +216,51 @@ const Search: React.FC = () => {
       resizeMode="contain"
     />
   );
+  const applyFilter = async () => {
+    try {
+      toggleModal();
+      let filteredData = cropsData.filter(item => {
+        if (selectedCropCategory && item.category !== selectedCropCategory) {
+          return false;
+        }
+        const itemPrice = parseFloat(item.price);
+        if (high && itemPrice > high) {
+          return false;
+        }
+        if (selectedRating && item.averageRating !== selectedRating) {
+          return false;
+        }
+        return true;
+      });
+      switch (selectedSortByFilter) {
+        case 'Most recent':
+          filteredData.sort(
+            (a, b) => b.createdAt.seconds - a.createdAt.seconds,
+          );
+          break;
+        case 'Popular':
+          filteredData.sort((a, b) => b.noOfSold - a.noOfSold);
+          break;
+        case 'Price high':
+          filteredData.sort(
+            (a, b) => parseFloat(b.price) - parseFloat(a.price),
+          );
+          break;
+        case 'Price low':
+          filteredData.sort(
+            (a, b) => parseFloat(a.price) - parseFloat(b.price),
+          );
+          break;
+        default:
+          break;
+      }
+      setShowFilterData(true);
+      setFilteredCropsData(filteredData);
+    } catch (error) {
+      console.error('Error applying filters:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subContainer}>
@@ -219,36 +286,38 @@ const Search: React.FC = () => {
           )}
         />
         {showResults && !isFocused ? (
-  isLoading ? (
-    <ActivityIndicator
-      color={theme.colors.primaryButton}
-      style={{marginTop: heightPercentageToDP(1)}}
-      size={Platform.OS == 'ios' ? 'large' : widthPercentageToDP(11)}
-    />
-  ) : (
-    <View>
-      <View style={styles.rowContainer}>
-        <View style={styles.resultTextContainer}>
-          <Text style={styles.resultText}>Results for{' "'}</Text>
-          <Text style={styles.queryText}>{searchedQuery}</Text>
-          <Text style={styles.resultText}>{'"'}</Text>
-        </View>
-        <Text style={styles.itemText}>{cropsData?.length} found</Text>
-      </View>
-          <FlatList
-            data={cropsData}
-            keyExtractor={item => item.id}
-            renderItem={renderFoundCrops}
-            numColumns={2}
-            ListEmptyComponent={EmptyComponent}
-            contentContainerStyle={{paddingBottom:heightPercentageToDP(35)}}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={{marginTop: heightPercentageToDP(3)}}
-          />
-    </View>
-  )
-) : undefined}
+          isLoading ? (
+            <ActivityIndicator
+              color={theme.colors.primaryButton}
+              style={{marginTop: heightPercentageToDP(1)}}
+              size={Platform.OS == 'ios' ? 'large' : widthPercentageToDP(11)}
+            />
+          ) : (
+            <View>
+              <View style={styles.rowContainer}>
+                <View style={styles.resultTextContainer}>
+                  <Text style={styles.resultText}>Results for{' "'}</Text>
+                  <Text style={styles.queryText}>{searchedQuery}</Text>
+                  <Text style={styles.resultText}>{'"'}</Text>
+                </View>
+                <Text style={styles.itemText}>{cropsData?.length} found</Text>
+              </View>
+              <FlatList
+                data={showFilterData ? filteredCropsData : cropsData}
+                keyExtractor={item => item.id}
+                renderItem={renderFoundCrops}
+                numColumns={2}
+                ListEmptyComponent={EmptyComponent}
+                contentContainerStyle={{
+                  paddingBottom: heightPercentageToDP(35),
+                }}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                style={{marginTop: heightPercentageToDP(3)}}
+              />
+            </View>
+          )
+        ) : undefined}
 
         {/* {isFocused ? (
           <View>
@@ -287,7 +356,7 @@ const Search: React.FC = () => {
           <View style={styles.lineSeperator}></View>
           <Text style={styles.headingText}>Categories</Text>
           <GestureHandlerFlatList
-            data={vegetableData}
+            data={cropCategories}
             horizontal
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
@@ -334,7 +403,7 @@ const Search: React.FC = () => {
               textStyle={{color: theme.colors.primaryButton}}
             />
             <PrimaryButton
-              onPress={toggleModal}
+              onPress={applyFilter}
               style={styles.applyButton}
               title="Apply"
             />
