@@ -1,22 +1,21 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {SafeAreaView, Text, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { SafeAreaView, Text, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import {
-  heightPercentageToDP,
-  widthPercentageToDP,
+  widthPercentageToDP
 } from 'react-native-responsive-screen';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import InputBoxWithIcon from '../../components/InputBoxWithIcon';
 import PrimaryButton from '../../components/PrimaryButton';
 import images from '../../config/images';
-import {useStyle} from './styles';
-import {useDispatch, useSelector} from 'react-redux';
-import firestore from '@react-native-firebase/firestore';
-import {formateErrorMessage} from '../../utils/helperFunctions';
-import {enableSnackbar} from '../../redux/slices/snackbarSlice';
+import { enableSnackbar } from '../../redux/slices/snackbarSlice';
 import { saveUser } from '../../redux/slices/userSlice';
+import { formateErrorMessage } from '../../utils/helperFunctions';
+import { useStyle } from './styles';
 const EditProfile: React.FC = () => {
   const styles = useStyle();
   const user = useSelector(state => state.userReducer.user);
@@ -88,7 +87,7 @@ const EditProfile: React.FC = () => {
             <Text
               style={[
                 styles.error,
-                {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+                {maxWidth: widthPercentageToDP(43)},
               ]}>
               Name is required
             </Text>
@@ -125,7 +124,7 @@ const EditProfile: React.FC = () => {
             <Text
               style={[
                 styles.error,
-                {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+                {maxWidth: widthPercentageToDP(43)},
               ]}>
               {formState.errors.email.type === 'pattern'
                 ? 'Invalid email address'
@@ -162,7 +161,7 @@ const EditProfile: React.FC = () => {
             <Text
               style={[
                 styles.error,
-                {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+                {maxWidth: widthPercentageToDP(43)},
               ]}>
               {formState.errors.phone.type === 'required'
                 ? 'Phone is required'

@@ -29,6 +29,16 @@ const Login: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const keepOnlyOneLoginScreen = () => {
+    const state = navigation.getState();
+    const loginScreen = state.routes.find(route => route.name === 'Login');
+    if (loginScreen) {
+      navigation.reset({
+        index: 0,
+        routes: [loginScreen],
+      });
+    }
+  };
   const login = async (data?: any) => {
     try {
       setIsLoading(true);
@@ -52,7 +62,8 @@ const Login: React.FC = () => {
         profileUrl: userInfo?.profileUrl,
       };
       dispatch(saveUser(userPayload));
-      navigation.navigate('Main');
+      keepOnlyOneLoginScreen();
+      navigation.replace('Main');
     } catch (error) {
 
       console.log(error)
@@ -106,7 +117,7 @@ const Login: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.email.type === 'pattern'
               ? 'Invalid email address'
@@ -148,7 +159,7 @@ const Login: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.password.type == 'required'
               ? 'Password is required'

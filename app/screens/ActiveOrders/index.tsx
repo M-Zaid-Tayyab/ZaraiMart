@@ -47,7 +47,9 @@ const ActiveOrders: React.FC = () => {
     let notifications = item?.notifications?.filter(
       item => item?.requestedBy != user?.uid,
     );
-    notifications=notifications?.reverse();
+    notifications = notifications?.reverse();
+    const otherUserId =
+      item?.buyerId !== user?.uid ? item?.buyerId : item?.sellerId;
     return (
       <OrderCard
         style={styles.orderCardStyle}
@@ -56,8 +58,11 @@ const ActiveOrders: React.FC = () => {
         price={item?.price}
         status={'active'}
         quantity={item?.quantity}
-        greenDot={notifications&&notifications?.length>0?true:false}
+        greenDot={notifications && notifications?.length > 0 ? true : false}
         deadline={getDaysLeft(item?.deadline)}
+        onSellerPress={() =>
+          navigation.navigate('Chat', {otherUserId: otherUserId})
+        }
         onItemPress={() => {
           navigation.navigate('EditOrder', {
             item: item,

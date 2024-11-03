@@ -30,17 +30,22 @@ const CancelledOrders: React.FC = () => {
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
   const renderOrders = ({item}) => {
-    const timestamp = new Date((item?.cancelledAt.seconds * 1000) + (item?.cancelledAt.nanoseconds / 1000000));
-const dateString = timestamp.toISOString().split('T')[0]; 
-const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-const formattedDate = timestamp.toLocaleDateString(undefined, options);
+    const timestamp = new Date(
+      item?.cancelledAt.seconds * 1000 +
+        item?.cancelledAt.nanoseconds / 1000000,
+    );
+    const dateString = timestamp.toISOString().split('T')[0];
+    const options = {year: 'numeric', month: '2-digit', day: '2-digit'};
+    const formattedDate = timestamp.toLocaleDateString(undefined, options);
+    const otherUserId =
+      item?.buyerId !== user?.uid ? item?.buyerId : item?.sellerId;
     return (
       <OrderCard
         style={styles.orderCardStyle}
         imageUrl={{uri: item?.cropData?.images?.[0]}}
         cropName={item?.cropData?.title}
         price={item?.price}
-        status='cancelled'
+        status="cancelled"
         quantity={item?.quantity}
         sellerName={item?.seller?.name}
         date={formattedDate}
@@ -48,6 +53,9 @@ const formattedDate = timestamp.toLocaleDateString(undefined, options);
           item?.seller?.profileUrl
             ? {uri: item?.seller?.profileUrl}
             : images.Home.userPlaceholder
+        }
+        onSellerPress={() =>
+          navigation.navigate('Chat', {otherUserId: otherUserId})
         }
       />
     );

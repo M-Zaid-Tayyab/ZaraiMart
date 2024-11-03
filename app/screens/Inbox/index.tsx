@@ -143,6 +143,7 @@ const Inbox: React.FC = () => {
     }
   };
   useEffect(() => {
+    if(isFocused)
     getUserChatsWithOtherUser();
   }, [isFocused]);
   return (

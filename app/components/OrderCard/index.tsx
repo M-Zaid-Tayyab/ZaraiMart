@@ -30,14 +30,14 @@ const OrderCard: React.FC<Props> = props => {
           </View>
           <Text style={styles.qtText}>Qty = {props?.quantity}</Text>
           <View style={styles.sellerContainer}>
-            <View style={styles.row}>
+            <TouchableOpacity onPress={props?.onSellerPress} style={styles.row}>
               <FastImage
                 source={props?.sellerImg}
                 style={styles.sellerImg}
                 resizeMode="cover"
               />
               <Text style={styles.headingText}>{props?.sellerName}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.flexrow}>
             <Text

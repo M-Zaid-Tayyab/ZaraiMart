@@ -106,7 +106,7 @@ const Signup: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             Name is required
           </Text>
@@ -146,7 +146,7 @@ const Signup: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.email.type === 'pattern'
               ? 'Invalid email address'
@@ -189,7 +189,7 @@ const Signup: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.phone.type === 'required'
               ? 'Phone is required'
@@ -235,7 +235,7 @@ const Signup: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.password.type == 'required'
               ? 'Password is required'
@@ -275,7 +275,7 @@ const Signup: React.FC = () => {
           <Text
             style={[
               styles.error,
-              {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+              {maxWidth: widthPercentageToDP(43)},
             ]}>
             {formState.errors.confirmPassword.message}
           </Text>

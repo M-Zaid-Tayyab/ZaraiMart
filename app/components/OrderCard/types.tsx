@@ -17,6 +17,7 @@ export interface Props {
   rightIcn?:any;
   onRightIcnPress?:()=> void;
   onItemPress?:()=> void;
+  onSellerPress?:()=> void;
   greenDot?:boolean;
   date?:any;
   rating?:any;

@@ -87,7 +87,7 @@ const ForgotPassword: React.FC = () => {
             <Text
               style={[
                 styles.error,
-                {maxWidth: widthPercentageToDP(43), alignSelf: 'flex-end'},
+                {maxWidth: widthPercentageToDP(43)},
               ]}>
               {formState.errors.email.type === 'pattern'
                 ? 'Invalid email address'

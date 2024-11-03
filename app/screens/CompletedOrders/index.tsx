@@ -43,6 +43,8 @@ const CompletedOrders: React.FC = () => {
     setModalVisible(!isModalVisible);
   };
   const renderOrders = ({item}) => {
+    const otherUserId =
+      item?.buyerId !== user?.uid ? item?.buyerId : item?.sellerId;
     return(
     <OrderCard
       style={styles.orderCardStyle}
@@ -52,6 +54,9 @@ const CompletedOrders: React.FC = () => {
       status={'completed'}
       quantity={item?.quantity}
       rating={item?.review?.rating}
+      onSellerPress={() =>
+        navigation.navigate('Chat', {otherUserId: otherUserId})
+      }
       onPress={() => {
         setSelectedItem(item);
         setModalVisible(true);

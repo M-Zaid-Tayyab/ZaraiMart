@@ -96,6 +96,7 @@ const Crop: React.FC = ({route}) => {
             userId: userData,
             reviews: reviews,
             averageRating: averageRating,
+            sellerId:userRef?.id,
           });
         }
       }
@@ -235,7 +236,7 @@ const Crop: React.FC = ({route}) => {
               <TouchableOpacity
                 style={styles.messageContainer}
                 onPress={() => {
-                  navigation.navigate('Chat');
+                  navigation.navigate('Chat',{otherUserId:cropDetails?.sellerId});
                 }}>
                 <Text style={styles.messageText}>Message</Text>
               </TouchableOpacity>
