@@ -35,7 +35,7 @@ const CompletedOrders: React.FC = () => {
   const [review, setReview] = useState('');
   const isFocused = useIsFocused();
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector(state => state.userReducer.user);
   const [selectedItem, setSelectedItem] = useState();
   const dispatch = useDispatch();
@@ -71,7 +71,7 @@ const CompletedOrders: React.FC = () => {
   )};
   const getCompletedOrders = async () => {
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const ordersSnapshot = await firestore()
         .collection('orders')
         .where('status', '==', 'Completed')

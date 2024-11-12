@@ -26,7 +26,7 @@ const ActiveOrders: React.FC = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
   const getDaysLeft = deadline => {
@@ -80,7 +80,7 @@ const ActiveOrders: React.FC = () => {
   };
   const getActiveOrders = async () => {
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const ordersSnapshot = await firestore()
         .collection('orders')
         .where('status', '==', 'Active')

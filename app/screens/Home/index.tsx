@@ -80,7 +80,7 @@ const Home: React.FC = () => {
   };
   const getSortedCrops = async () => {
     try {
-      setIsRecentlyCropsLoading(true);
+      // setIsRecentlyCropsLoading(true);
       const cropsSnapshot = await firestore()
         .collection('crops')
         .orderBy('createdAt', 'desc')
@@ -122,7 +122,7 @@ const Home: React.FC = () => {
   };
   const getPopularCrops = async () => {
     try {
-      setIsPopularCropsLoading(true);
+      // setIsPopularCropsLoading(true);
       const cropsSnapshot = await firestore()
         .collection('crops')
         .limit(10)

@@ -31,7 +31,7 @@ const Checkout: React.FC = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const user = useSelector(state => state.userReducer.user);
   const dispatch = useDispatch();
   const [isModalVisible, setModalVisible] = useState(false);
@@ -75,7 +75,7 @@ const Checkout: React.FC = () => {
   );
   const getPaymentPendingOrders = async () => {
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const ordersSnapshot = await firestore()
         .collection('orders')
         .where('status', '==', 'Payment Pending')

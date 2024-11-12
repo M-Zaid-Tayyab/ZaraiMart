@@ -36,7 +36,7 @@ const SeeAll: React.FC = ({route}) => {
   );
   const getSortedCrops = async () => {
     try {
-      setIsCropsLoading(true);
+      // setIsCropsLoading(true);
       const cropsSnapshot = await firestore()
         .collection('crops')
         .orderBy('createdAt', 'desc')
@@ -54,7 +54,7 @@ const SeeAll: React.FC = ({route}) => {
   };
   const getPopularCrops = async () => {
     try {
-      setIsCropsLoading(true);
+      // setIsCropsLoading(true);
       const cropsSnapshot = await firestore()
         .collection('crops')
         .limit(10)

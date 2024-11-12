@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,15 +10,12 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useTheme} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { useSelector } from 'react-redux';
 import Header from '../../components/Header';
-import {messages} from '../../utils/dummyData';
-import {useStyle} from './styles';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
 import images from '../../config/images';
-import firestore from '@react-native-firebase/firestore';
-import {useSelector} from 'react-redux';
-import {heightPercentageToDP} from 'react-native-responsive-screen';
+import { useStyle } from './styles';
 
 const Inbox: React.FC = () => {
   const styles = useStyle();
@@ -143,8 +142,9 @@ const Inbox: React.FC = () => {
     }
   };
   useEffect(() => {
-    if(isFocused)
+    if(isFocused){
     getUserChatsWithOtherUser();
+    }
   }, [isFocused]);
   return (
     <SafeAreaView style={styles.container}>

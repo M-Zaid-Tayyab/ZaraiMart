@@ -207,6 +207,10 @@ const Profile: React.FC = () => {
         isVisible={isModalVisible}
         onBackButtonPress={toggleModal}
         onBackdropPress={toggleModal}
+        animationInTiming={400}
+        animationOutTiming={900}
+        backdropTransitionInTiming={400}
+        backdropTransitionOutTiming={900}
         style={{margin: 0}}>
         <View style={styles.modalView}>
           <View style={styles.topIndicator}></View>
