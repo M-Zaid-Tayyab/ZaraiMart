@@ -2,7 +2,7 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
 import {Platform, Pressable, StatusBar, Text, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import {Snackbar, useTheme} from 'react-native-paper';
 import {
   heightPercentageToDP,

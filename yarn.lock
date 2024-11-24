@@ -1653,6 +1653,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@d11/react-native-fast-image@npm:^8.8.1":
+  version: 8.8.1
+  resolution: "@d11/react-native-fast-image@npm:8.8.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: e2fed0345f174e79004004dde1cd08895bf3b9b34a5f0e8d97137fb1617aa6d671f3447def7495756a961665cbd70ed0e2fdc5dc08d6e4c62fcbe74a847f5f05
+  languageName: node
+  linkType: hard
+
 "@egjs/hammerjs@npm:^2.0.17":
   version: 2.0.17
   resolution: "@egjs/hammerjs@npm:2.0.17"
@@ -3864,6 +3874,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@d11/react-native-fast-image": ^8.8.1
     "@miblanchard/react-native-slider": ^2.6.0
     "@react-native-async-storage/async-storage": ^2.0.0
     "@react-native-community/geolocation": ^3.4.0
@@ -3903,7 +3914,6 @@ __metadata:
     react-native-device-info: ^11.1.0
     react-native-element-dropdown: ^2.12.1
     react-native-elements: ^3.4.3
-    react-native-fast-image: ^8.6.3
     react-native-gesture-handler: ^2.19.0
     react-native-get-random-values: ^1.11.0
     react-native-gifted-chat: ^2.6.2
@@ -9613,16 +9623,6 @@ __metadata:
     react-native-safe-area-context: ">= 3.0.0"
     react-native-vector-icons: ">7.0.0"
   checksum: e055c18b85527366d7b9e76139828fe3d006a7a8c11f81b165e43b4175c0d4b15eef6308679dd596d33f0813a512c27cb993d6ca49e00c56fcb15a0918d96c6c
-  languageName: node
-  linkType: hard
-
-"react-native-fast-image@npm:^8.6.3":
-  version: 8.6.3
-  resolution: "react-native-fast-image@npm:8.6.3"
-  peerDependencies:
-    react: ^17 || ^18
-    react-native: ">=0.60.0"
-  checksum: 29289cb6b2eae0983c8922b22e2d9de3be07322bb7991c5def19f95eadefaedb0e308ff0b38cc1d0444e8bd4fe94a7621a99a2d3d9298100bcb60b3144677234
   languageName: node
   linkType: hard
 

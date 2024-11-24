@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useStyle } from './style';
 import { Props } from './types';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import { widthPercentageToDP } from 'react-native-responsive-screen';
 const EmptyComponent: React.FC<Props> = props => {
   const styles = useStyle();

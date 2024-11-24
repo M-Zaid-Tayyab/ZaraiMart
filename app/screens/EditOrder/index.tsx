@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import Modal from 'react-native-modal';
 import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';

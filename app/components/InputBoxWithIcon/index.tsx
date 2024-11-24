@@ -12,7 +12,7 @@ import {widthPercentageToDP} from 'react-native-responsive-screen';
 import {useStyle} from './style';
 import {Props} from './types';
 import images from '../../config/images';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 const InputBoxWithIcon: React.FC<Props> = props => {
   const styles = useStyle();
   const [isFocused, setIsFocused] = useState(false);

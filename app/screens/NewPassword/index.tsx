@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Text, View, TouchableOpacity, Modal, SafeAreaView} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useTheme} from 'react-native-paper';
 import Header from '../../components/Header';

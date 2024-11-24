@@ -3,7 +3,7 @@ import React, {useLayoutEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Pressable, ScrollView, Text, View} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useTheme} from 'react-native-paper';
 import {

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Pressable, Text, TextInput, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
+import FastImage from "@d11/react-native-fast-image";
 import {useTheme} from 'react-native-paper';
 import {widthPercentageToDP} from 'react-native-responsive-screen';
 import images from '../../config/images';
